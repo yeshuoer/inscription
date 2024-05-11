@@ -18,12 +18,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="cupcake">
+    <html lang="en" data-theme="autumn">
       <body className={inter.className}>
         <Providers>
-          <div>
+          <div className="pt-16">
             <GlobalHeader />
-            <hr />
             {children}
           </div>
         </Providers>

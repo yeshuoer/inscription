@@ -12,10 +12,10 @@ export default function GlobalHeader() {
     return link === pathname ? 'tab tab-active' : 'tab'
   }
 
-  return <header>
-    <div className="navbar bg-base-100">
+  return <header className='box-border px-6 fixed left-0 top-0 z-10 w-full border-b-2 bg-base-100'>
+    <div className="navbar">
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl italic text-primary">Inscription Market</a>
+        <Link href='/' className='text-xl font-bold italic text-primary'>Inscription Market</Link>
       </div>
 
       <ul role='tablist' className='tabs tabs-boxed flex-1'>
