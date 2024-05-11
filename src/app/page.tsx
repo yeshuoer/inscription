@@ -2,6 +2,7 @@
 
 import { log } from "@/utils";
 import { fetchRecords } from "@/utils/api";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 enum ASC20Operation {
@@ -22,30 +23,59 @@ type ASC20Record = IASC20Protocol & {
   id: number;
 }
 
+const formatContent = (item: ASC20Record) => {
+  let o = {
+    p: 'asc-20',
+    op: item.operation,
+    tick: item.tick,
+    amt: item.amount,
+  }
+  type Protocal = typeof o & {limit?: number}
+  const o1 = o as Protocal
+  if (item.operation === ASC20Operation.Deploy) {
+    o1.limit = item.limit
+  }
+  let r = JSON.stringify(o1, null, 2)
+  return r
+}
+
 export default function Home() {
   const [list, setList] = useState([])
 
   useEffect(() => {
+    handleRefresh()
+  }, [])
+  
+  const handleRefresh = () => {
     fetchRecords(100000000).then(data => {
       setList(data.data)
     })
-  }, [])
+  }
 
   return (
-    <main className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between p-4">
-      {list.map((item: ASC20Record, index) => {
-        return (
-          <div key={item.id} className="card bg-stone-100 min-w-56 ring-2 ring-base-300 hover:ring-primary cursor-pointer">
-            <div className="card-body w-full p-0">
-              <div className="p-6">
+    <div>
+      <div className="flex justify-between items-center px-4 py-4">
+        <p className="text-primary text-xl font-bold">Latest Inscriptions</p>
+        <section className="flex items-center cursor-pointer" onClick={handleRefresh}>
+          <div className="mr-2 text-primary">Refresh</div>
+          <Image src="/sync.svg" alt="refresh" width={18} height={18} />
+        </section>
+      </div>
 
-              {item.id}
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between p-4">
+        {list.map((item: ASC20Record, index) => {
+          return (
+            <div key={item.id} className="card bg-stone-100 min-w-56 ring-2 ring-base-300 hover:ring-primary cursor-pointer">
+              <div className="card-body w-full h-70 p-0">
+                <pre className="p-6 h-full">
+                  {formatContent(item)}
+                </pre>
+                <div className="bg-stone-200 rounded-bl-2xl rounded-br-2xl py-4 px-6">465</div>
               </div>
-              <div className="bg-stone-200 rounded-bl-2xl rounded-br-2xl py-4 px-6">465</div>
             </div>
-          </div>
-        )
-      })}
-    </main>
+          )
+        })}
+      </div>
+    </div>
   );
 }
