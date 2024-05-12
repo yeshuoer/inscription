@@ -1,5 +1,3 @@
-'use client'
-
 import { log } from "@/libs";
 import { fetchTokens } from "@/libs/api";
 import { useEffect, useState } from "react";
