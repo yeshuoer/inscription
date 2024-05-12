@@ -1,7 +1,7 @@
 'use client'
 
-import { log } from "@/utils";
-import { fetchTokens } from "@/utils/api";
+import { log } from "@/libs";
+import { fetchTokens } from "@/libs/api";
 import { useEffect, useState } from "react";
 import {formatDistanceToNow} from 'date-fns'
 
@@ -14,14 +14,9 @@ interface IToken {
   max: number;
 }
 
-export default function TokensPage() {
-  const [list, setList] = useState<IToken[]>([])
-
-  useEffect(() => {
-    fetchTokens().then(data => {
-      setList(data.data)
-    })
-  }, [])
+export default async function TokenPage() {
+  const data = await fetchTokens()
+  const list: IToken[] = data.data
 
   return <div>
     <div className="flex justify-between items-center mb-6">
