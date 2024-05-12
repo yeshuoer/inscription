@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en" data-theme="autumn">
       <body className={inter.className}>
         <Providers>
-          <div className="pt-16">
+          <div className="pt-24 px-6">
             <GlobalHeader />
             {children}
           </div>

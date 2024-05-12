@@ -62,7 +62,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex justify-between items-center px-4 pt-8 pb-4">
+      <div className="flex justify-between items-center mb-6">
         <p className="text-primary text-xl font-bold">Latest Inscriptions</p>
         <button className="flex items-center cursor-pointer" onClick={handleRefresh} disabled={loading}>
           <div className="mr-2 text-primary">Refresh</div>
@@ -74,7 +74,7 @@ export default function Home() {
 
       {
         !loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between">
             {list.map((item: ASC20Record, index) => {
               return (
                 <div key={item.id} className="card bg-stone-100 min-w-56 ring-2 ring-base-300 hover:ring-primary cursor-pointer">
