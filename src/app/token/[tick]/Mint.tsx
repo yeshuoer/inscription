@@ -9,7 +9,6 @@ import { InscriptionOp } from '@/types'
 import { toHex } from "viem"
 import toast, { ToastBar, Toaster } from "react-hot-toast"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 
 interface Props {
   detail: {

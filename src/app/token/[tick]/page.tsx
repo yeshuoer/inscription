@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mint } from "./Mint";
 import { formatDistanceToNow } from "date-fns";
+import { RefreshButton } from "@/components/RefreshButton";
 
 
 export default async function TokenDetialPage({params}: {params: {tick: string}}) {
@@ -20,7 +21,11 @@ export default async function TokenDetialPage({params}: {params: {tick: string}}
         </Link>
         <p className="text-primary font-bold italic text-3xl ml-4">{detail.tick}</p>
       </div>
-      <Mint detail={detail} />
+      <div className="flex items-center">
+        <RefreshButton />
+        <div className="w-4"></div>
+        <Mint detail={detail} />
+      </div>
     </header>
 
     <div className="flex items-center justify-between mb-12">

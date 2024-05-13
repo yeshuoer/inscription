@@ -5,6 +5,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { Deploy } from "./Deploy";
 import Link from "next/link";
 import Image from "next/image";
+import { RefreshButton } from "@/components/RefreshButton";
 
 interface IToken {
   tick: string;
@@ -22,7 +23,11 @@ export default async function TokenPage() {
   return <div>
     <div className="flex justify-between items-center mb-6">
       <div className="text-primary font-bold text-xl">The full list of tokens</div>
-      <Deploy />
+      <div className="flex items-center">
+        <RefreshButton />
+        <div className="w-4"></div>
+        <Deploy />
+      </div>
     </div>
     <table className="table">
       <thead>
