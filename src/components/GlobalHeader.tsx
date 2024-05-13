@@ -1,6 +1,7 @@
 'use client'
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -15,7 +16,10 @@ export default function GlobalHeader() {
   return <header className='box-border px-6 fixed left-0 top-0 z-10 w-full border-b-2 bg-base-100'>
     <div className="navbar">
       <div className="flex-1">
-        <Link href='/' className='text-xl font-bold italic text-primary'>Inscription Market</Link>
+        <Link href='/' className='text-xl font-bold italic text-primary flex items-center'>
+          <Image src='/logo.png' alt='logo' width={48} height={48} />
+          Inscription Market
+        </Link>
       </div>
 
       <ul role='tablist' className='tabs tabs-boxed flex-1'>
