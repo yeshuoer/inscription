@@ -2,6 +2,7 @@ import { log } from "@/libs";
 import { fetchTokens } from "@/libs/api";
 import { useEffect, useState } from "react";
 import {formatDistanceToNow} from 'date-fns'
+import { Deploy } from "./Deploy";
 
 interface IToken {
   tick: string;
@@ -19,7 +20,7 @@ export default async function TokenPage() {
   return <div>
     <div className="flex justify-between items-center mb-6">
       <div className="text-primary font-bold text-xl">The full list of tokens</div>
-      <button className="btn btn-primary btn-sm">Deploy</button>
+      <Deploy />
     </div>
     <table className="table">
       <thead>
