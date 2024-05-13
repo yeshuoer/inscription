@@ -1,7 +1,6 @@
 'use client'
 
 import { log } from "@/libs"
-import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { sepolia } from "viem/chains"
 import { useAccount, useChainId, useConnect, useSendTransaction, useSignTypedData, useSwitchChain } from "wagmi"
@@ -27,7 +26,7 @@ export function Deploy() {
   const [limit, setLimit] = useState('')
 
   const openModal = () => {
-    const dom = document.getElementById('my_modal_1') as any
+    const dom = document.getElementById('deploy_btn_modal') as any
     dom.showModal()
   }
 
@@ -117,7 +116,7 @@ export function Deploy() {
     {/* Open the modal using document.getElementById('ID').showModal() method */}
     <button className="btn btn-primary btn-sm" onClick={() => openModal()}>Deploy</button>
 
-    <dialog id="my_modal_1" className="modal">
+    <dialog id="deploy_btn_modal" className="modal">
       <div className="modal-box">
 
         <div className="modal-action w-full">
