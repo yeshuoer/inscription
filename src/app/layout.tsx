@@ -22,10 +22,10 @@ export default function RootLayout({
     <html lang="en" data-theme="autumn">
       <body className={inter.className}>
         <Providers>
-          <div className="pt-24 px-6">
+          <div className="py-24 px-6">
             <GlobalHeader />
             <Toaster />
-            {children}
+              {children}
           </div>
         </Providers>
       </body>
