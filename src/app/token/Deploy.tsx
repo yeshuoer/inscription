@@ -4,20 +4,23 @@ import { log } from "@/libs"
 import { useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { sepolia } from "viem/chains"
-import { useAccount, useChainId, useClient, useConnect, useSendTransaction, useSwitchChain } from "wagmi"
+import { useAccount, useChainId, useConnect, useSendTransaction, useSignTypedData, useSwitchChain } from "wagmi"
 import { injected } from "wagmi/connectors"
 import { InscriptionOp } from '@/types'
 import { toHex } from "viem"
+import toast, { Toaster } from "react-hot-toast"
+import { useRouter } from "next/navigation"
 
 
 export function Deploy() {
+  const router = useRouter()
+
   const { address, isConnected } = useAccount()
   const chainId = useChainId()
-  const { sendTransactionAsync, sendTransaction } = useSendTransaction()
-  const client = useClient()
-  const queryClient = useQueryClient()
+  const { sendTransactionAsync } = useSendTransaction()
   const { connectAsync } = useConnect()
   const { switchChainAsync } = useSwitchChain()
+  const { signTypedDataAsync } = useSignTypedData()
 
   const [tick, setTick] = useState('')
   const [max, setMax] = useState('')
@@ -28,10 +31,7 @@ export function Deploy() {
     dom.showModal()
   }
 
-  const getCalldata = () => {
-    if (!tick || !max || !limit) {
-      return undefined
-    }
+  const getCalldataContent = () => {
     const o = {
       p: process.env.NEXT_PUBLIC_INSCRIPTION_PROTOCOL,
       op: InscriptionOp.Deploy,
@@ -41,16 +41,15 @@ export function Deploy() {
     }
     let s = JSON.stringify(o)
     s = `data:,${s}`
-    log('raw', s)
-    return toHex(s)
+    return s
   }
 
   const handleDeploy = async () => {
-    const calldata = getCalldata()
-    if (!calldata) {
+    if (!tick || !max || !limit) {
       return
     }
 
+    // check all vilad
     let currentChainId = chainId
     let currentAccount = address
 
@@ -69,16 +68,52 @@ export function Deploy() {
       })
     }
 
-    if (currentAccount) {
-      sendTransaction({
-        to: currentAccount,
-        value: BigInt(0),
-        data: calldata,
-      })
+    if (!currentAccount) {
+      return
     }
+
+    const calldataContent = getCalldataContent()
+    const calldata = toHex(calldataContent)
+
+    // eip712 sign
+    const signature = await signTypedDataAsync({
+      types: {
+        Address: [
+          {name: 'address', type: 'address'},
+        ],
+        Confirm: [
+          { name: 'Wallet used', type: 'Address' },
+          { name: 'Interact with', type: 'Address' },
+          { name: 'data', type: 'string' },
+          { name: 'utf8', type: 'string' },
+        ]
+      },
+      primaryType: 'Confirm',
+      message: {
+        'Wallet used': {
+          address: currentAccount,
+        },
+        'Interact with': {
+          address: currentAccount,
+        },
+        data: calldata,
+        utf8: calldataContent,
+      },
+    })
+
+    // send tx
+    await sendTransactionAsync({
+      to: currentAccount,
+      value: BigInt(0),
+      data: calldata,
+    })
+
+    toast.success('Deploy success!')
+    router.refresh()
   }
 
   return <>
+    <Toaster />
     {/* Open the modal using document.getElementById('ID').showModal() method */}
     <button className="btn btn-primary btn-sm" onClick={() => openModal()}>Deploy</button>
 
