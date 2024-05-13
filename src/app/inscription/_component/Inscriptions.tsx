@@ -77,7 +77,7 @@ export default function InscriptionsComponent() {
                     {formatContent(item)}
                   </pre>
                   <div className="bg-stone-200 rounded-bl-2xl rounded-br-2xl py-4 px-6">
-                    {formatDistanceToNow(item.timestamp * 1000)}
+                    {formatDistanceToNow(item.timestamp * 1000, { addSuffix: true })}
                   </div>
                 </div>
               </div>

@@ -9,7 +9,7 @@ export default function GlobalHeader() {
   const pathname = usePathname()
 
   const activeClassName = (link: string) => {
-    return link === pathname ? 'tab tab-active' : 'tab'
+    return pathname.startsWith(link) ? 'tab tab-active' : 'tab'
   }
 
   return <header className='box-border px-6 fixed left-0 top-0 z-10 w-full border-b-2 bg-base-100'>

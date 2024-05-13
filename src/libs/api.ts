@@ -16,3 +16,9 @@ export const fetchTokens = async () => {
   const data = await res.json()
   return data
 }
+
+export const fetchToken = async (tick: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_GO_API}/token/${tick}`)
+  const data = await res.json()
+  return data
+}

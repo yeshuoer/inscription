@@ -1,8 +1,10 @@
 import { log } from "@/libs";
 import { fetchTokens } from "@/libs/api";
 import { useEffect, useState } from "react";
-import {formatDistanceToNow} from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import { Deploy } from "./Deploy";
+import Link from "next/link";
+import Image from "next/image";
 
 interface IToken {
   tick: string;
@@ -30,6 +32,7 @@ export default async function TokenPage() {
           <th>Progress</th>
           <th>Holders</th>
           <th>Transactions</th>
+          <th></th>
         </tr>
       </thead>
 
@@ -38,13 +41,17 @@ export default async function TokenPage() {
           list.map((item: IToken, index: number) => {
             return <tr key={item.tick}>
               <td className="text-primary font-bold italic text-l">{item.tick}</td>
-              <td>{formatDistanceToNow(item.created_at * 1000)}</td>
+              <td>{formatDistanceToNow(item.created_at * 1000, { addSuffix: true })}</td>
               <td>
-                <progress className="progress progress-primary w-56" value={item.progress} max={200}></progress>
-                {/* <progress className="progress progress-primary w-56" value={item.progress} max={item.max}></progress> */}
+                <progress className="progress progress-primary w-56" value={item.progress} max={item.max}></progress>
               </td>
               <td>{item.holders}</td>
               <td>{item.trxs}</td>
+              <td>
+                <Link href={`/token/${item.tick}`}>
+                  <Image src="/circle-right.svg" alt="arrow-right" width={20} height={20} />
+                </Link>
+              </td>
             </tr>
           })
         }
