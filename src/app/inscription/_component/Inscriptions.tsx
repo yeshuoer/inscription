@@ -5,6 +5,7 @@ import { log } from "@/libs";
 import { fetchRecords } from "@/libs/api";
 import Image from "next/image";
 import { useEffect, useState } from 'react';
+import Loading from '@/components/Loading';
 
 enum ASC20Operation {
   Deploy = 'deploy',
@@ -41,16 +42,19 @@ const formatContent = (item: ASC20Record) => {
   return r
 }
 
-export default async function InscriptionsComponent() {
+export default function InscriptionsComponent() {
   const [list, setList] = useState<ASC20Record[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     handleRefresh()
   }, [])
 
   const handleRefresh = async () => {
+    setLoading(true)
     const data = await fetchRecords(100000000)
     setList(data.data)
+    setLoading(false)
   }
 
   return (
@@ -63,22 +67,25 @@ export default async function InscriptionsComponent() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between">
-        {list.map((item: ASC20Record, index) => {
-          return (
-            <div key={item.id} className="card bg-stone-100 min-w-56 ring-2 ring-base-300 hover:ring-primary cursor-pointer">
-              <div className="card-body w-full h-70 p-0">
-                <pre className="p-6 h-full">
-                  {formatContent(item)}
-                </pre>
-                <div className="bg-stone-200 rounded-bl-2xl rounded-br-2xl py-4 px-6">
-                  {formatDistanceToNow(item.timestamp * 1000)}
+      {
+        loading ? <Loading /> : <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between">
+          {list.map((item: ASC20Record, index) => {
+            return (
+              <div key={item.id} className="card bg-stone-100 min-w-56 ring-2 ring-base-300 hover:ring-primary cursor-pointer">
+                <div className="card-body w-full h-70 p-0">
+                  <pre className="p-6 h-full">
+                    {formatContent(item)}
+                  </pre>
+                  <div className="bg-stone-200 rounded-bl-2xl rounded-br-2xl py-4 px-6">
+                    {formatDistanceToNow(item.timestamp * 1000)}
+                  </div>
                 </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      }
+
     </div>
   );
 }
