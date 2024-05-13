@@ -7,7 +7,7 @@ import { useAccount, useChainId, useConnect, useSendTransaction, useSignTypedDat
 import { injected } from "wagmi/connectors"
 import { InscriptionOp } from '@/types'
 import { toHex } from "viem"
-import toast, { Toaster } from "react-hot-toast"
+import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 
 
@@ -101,18 +101,26 @@ export function Deploy() {
     })
 
     // send tx
-    await sendTransactionAsync({
+    const txhash = await sendTransactionAsync({
       to: currentAccount,
       value: BigInt(0),
       data: calldata,
+    }, {
+      onError: error => {
+        toast.error(error.message)
+      },
     })
 
-    toast.success('Deploy success!')
-    router.refresh()
+    const url = process.env.NEXT_PUBLIC_ETHERSCAN_URL + txhash
+    toast.custom(
+      <div role="alert" className="alert w-auto mt-16">
+        <a className="link link-info" href={url} target="_blank">{txhash}</a>
+      </div>, {
+      duration: 5000,
+    })
   }
 
   return <>
-    <Toaster />
     {/* Open the modal using document.getElementById('ID').showModal() method */}
     <button className="btn btn-primary btn-sm" onClick={() => openModal()}>Deploy</button>
 

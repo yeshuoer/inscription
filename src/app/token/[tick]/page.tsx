@@ -12,7 +12,6 @@ export default async function TokenDetialPage({params}: {params: {tick: string}}
   const detail = data.data
   log('detail', detail)
 
-
   return <div className="w-full">
     <header className="flex items-center justify-between mb-6">
       <div className="flex items-center">
@@ -21,13 +20,12 @@ export default async function TokenDetialPage({params}: {params: {tick: string}}
         </Link>
         <p className="text-primary font-bold italic text-3xl ml-4">{detail.tick}</p>
       </div>
-      <Mint />
+      <Mint detail={detail} />
     </header>
 
     <div className="flex items-center justify-between mb-12">
-      {/* <progress className="progress progress-secondary flex-grow" value={detail.minted} max={detail.max}></progress> */}
-      <progress className="progress progress-secondary flex-grow" value={detail.minted} max={3000}></progress>
-      <p className="text-secondary text-l w-64 text-right">{detail.minted} / {detail.max}</p>
+      <progress className="progress progress-secondary flex-grow" value={detail.minted} max={detail.max}></progress>
+      <p className="text-secondary text-l w-32 text-right">{Number(detail.minted / detail.max * 100).toFixed(2)} %</p>
     </div>
 
     <div className="card w-full bg-secondary bg-opacity-85 text-base-100 shadow-xl p-4">
