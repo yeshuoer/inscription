@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useAccount, useConfig, useConnect } from "wagmi"
+import { useAccount, useConnect } from "wagmi"
 import { sepolia } from "viem/chains"
 import { injected } from "wagmi/connectors"
 

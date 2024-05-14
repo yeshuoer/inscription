@@ -1,14 +1,11 @@
 'use client'
 
 import { log } from "@/libs"
-import { useState } from "react"
-import { sepolia } from "viem/chains"
-import { useAccount, useChainId, useConnect, useSendTransaction, useSignTypedData, useSwitchChain } from "wagmi"
-import { injected } from "wagmi/connectors"
+import { useSendTransaction, useSignTypedData } from "wagmi"
 import { ASC20Operation } from '@/types'
 import { toHex } from "viem"
-import toast, { ToastBar, Toaster } from "react-hot-toast"
-import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
+import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
 
 interface Props {
   detail: {
@@ -20,16 +17,9 @@ interface Props {
 }
 
 export function Mint({ detail }: Props) {
-  const router = useRouter()
-
-  const { address, isConnected } = useAccount()
-  const chainId = useChainId()
   const { sendTransactionAsync } = useSendTransaction()
-  const { connectAsync } = useConnect()
-  const { switchChainAsync } = useSwitchChain()
   const { signTypedDataAsync } = useSignTypedData()
-
-  const [scanurl, setScanurl] = useState<string>('')
+  const {ensureConnected} = useAutoConnectForTransaction()
 
   const getCalldataContent = () => {
     const amt = detail.max - detail.minted > detail.limit ? detail.limit : detail.max - detail.minted
@@ -45,26 +35,13 @@ export function Mint({ detail }: Props) {
   }
 
   const handleMint = async () => {
-    // check all vilad
-    let currentChainId = chainId
-    let currentAccount = address
+    const {
+      connected,
+      account,
+    } = await ensureConnected()
 
-    if (!isConnected) {
-      const connectedData = await connectAsync({
-        connector: injected(),
-        chainId: sepolia.id,
-      })
-      currentChainId = connectedData.chainId
-      currentAccount = connectedData.accounts[0]
-    }
-
-    if (currentChainId !== sepolia.id) {
-      await switchChainAsync({
-        chainId: sepolia.id,
-      })
-    }
-
-    if (!currentAccount) {
+    if (!connected || !account) {
+      toast.error('Please connect your wallet.')
       return
     }
 
@@ -87,10 +64,10 @@ export function Mint({ detail }: Props) {
       primaryType: 'Confirm',
       message: {
         'Wallet used': {
-          address: currentAccount,
+          address: account,
         },
         'Interact with': {
-          address: currentAccount,
+          address: account,
         },
         data: calldata,
         utf8: calldataContent,
@@ -99,7 +76,7 @@ export function Mint({ detail }: Props) {
 
     // send tx
     const txhash = await sendTransactionAsync({
-      to: currentAccount,
+      to: account,
       value: BigInt(0),
       data: calldata,
     }, {
@@ -110,6 +87,7 @@ export function Mint({ detail }: Props) {
     const url = process.env.NEXT_PUBLIC_ETHERSCAN_URL + txhash
     toast.custom(
       <div role="alert" className="alert w-auto mt-16">
+        <span>Follow your transaction on </span>
         <a className="link link-info" href={url} target="_blank">{txhash}</a>
       </div>, {
       duration: 5000,
