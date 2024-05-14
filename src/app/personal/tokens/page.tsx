@@ -1,20 +1,37 @@
+'use client'
+
 import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
 import { fetchAddress, fetchRecords } from "@/libs/api";
 import { RefreshButton } from '@/components/RefreshButton';
-import { ASC20Operation, ServerSideComponentProps } from '@/types';
 import { Transfer } from './Tansfer'
+import { useEffect, useState } from 'react';
+import { useAccount } from 'wagmi';
+import { useAutoConnectForTransaction } from '@/hooks/useAutoConnectForTransaction';
 
 interface ListItem {
   tick: string;
   amt: number;
 }
 
-export default async function PersonalInscriptionsPage({
-  params,
-}: {params: {account: string}}) {
-  const data = await fetchAddress(params.account)
-  const list = data.data as ListItem[]
+export default function PersonalInscriptionsPage() {
+  const [list, setList] = useState<ListItem[]>([])
+  const {ensureConnected} = useAutoConnectForTransaction()
+
+  useEffect(() => {
+    init()
+  }, [])
+  
+  const init = async () => {
+    const {
+      connected,
+      account,
+    } = await ensureConnected()
+    if (account) {
+      const data = await fetchAddress(account)
+      setList(data.data)
+    }
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between">

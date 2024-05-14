@@ -26,7 +26,7 @@ export default function GlobalHeader() {
         <li role='tab' className={activeClassName('/inscription')}><Link href="/inscription">Inscriptions</Link></li>
         <li role='tab' className={activeClassName('/token')}><Link href="/token">Tokens</Link></li>
         <li role='tab' className={activeClassName('/market')}><Link href="/market">Marketplace</Link></li>
-        <li role='tab' className={activeClassName('/personal')}><Link href="/personal">Personal</Link></li>
+        <li role='tab' className={activeClassName('/personal')}><Link href="/personal/tokens">Personal</Link></li>
       </ul>
 
       <div className='flex-1 justify-end'>
