@@ -5,7 +5,7 @@ import { useState } from "react"
 import { sepolia } from "viem/chains"
 import { useAccount, useChainId, useConnect, useSendTransaction, useSignTypedData, useSwitchChain } from "wagmi"
 import { injected } from "wagmi/connectors"
-import { InscriptionOp } from '@/types'
+import { ASC20Operation } from '@/types'
 import { toHex } from "viem"
 import toast, { ToastBar, Toaster } from "react-hot-toast"
 import { useRouter } from "next/navigation"
@@ -35,7 +35,7 @@ export function Mint({ detail }: Props) {
     const amt = detail.max - detail.minted > detail.limit ? detail.limit : detail.max - detail.minted
     const o = {
       p: process.env.NEXT_PUBLIC_INSCRIPTION_PROTOCOL,
-      op: InscriptionOp.Mint,
+      op: ASC20Operation.Mint,
       tick: detail.tick,
       amt: String(amt),
     }

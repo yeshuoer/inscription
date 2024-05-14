@@ -5,7 +5,7 @@ import { useState } from "react"
 import { sepolia } from "viem/chains"
 import { useAccount, useChainId, useConnect, useSendTransaction, useSignTypedData, useSwitchChain } from "wagmi"
 import { injected } from "wagmi/connectors"
-import { InscriptionOp } from '@/types'
+import { ASC20Operation } from '@/types'
 import { toHex } from "viem"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
@@ -33,7 +33,7 @@ export function Deploy() {
   const getCalldataContent = () => {
     const o = {
       p: process.env.NEXT_PUBLIC_INSCRIPTION_PROTOCOL,
-      op: InscriptionOp.Deploy,
+      op: ASC20Operation.Deploy,
       tick: tick,
       max: max,
       lim: limit,

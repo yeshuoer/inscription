@@ -22,3 +22,17 @@ export const fetchToken = async (tick: string) => {
   const data = await res.json()
   return data
 }
+
+export const fetchAddress = async (address: string) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_GO_API}/address/${address}`)
+  const data = await res.json()
+  let list: any[] = []
+  Object.entries(data.data).map(([key, value]) => {
+    list.push({
+      tick: key,
+      amt: value,
+    })
+  })
+  data.data = list
+  return data
+}

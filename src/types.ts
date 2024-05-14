@@ -1,10 +1,10 @@
 export type ServerSideComponentProps = {
-  searchParams?: Record<string, string | undefined>;
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
-export enum InscriptionOp {
-  Deploy='deploy',
-  Mint='mint',
-  Transfer='transfer',
-  List='list',
+export enum ASC20Operation {
+  Deploy = 'deploy',
+  Mint = 'mint',
+  Transfer = 'transfer',
+  List = 'list',
 }
