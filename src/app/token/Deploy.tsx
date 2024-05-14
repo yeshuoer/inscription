@@ -1,7 +1,7 @@
 'use client'
 
 import { log } from "@/libs"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useSendTransaction, useSignTypedData } from "wagmi"
 import { ASC20Operation } from '@/types'
 import { toHex } from "viem"
@@ -21,10 +21,7 @@ export function Deploy() {
   const [max, setMax] = useState('')
   const [limit, setLimit] = useState('')
 
-  const openModal = () => {
-    const dom = document.getElementById('deploy_btn_modal') as any
-    dom.showModal()
-  }
+  const [isOpen, setIsOpen] = useState(false)
 
   const getCalldataContent = () => {
     const o = {
@@ -102,16 +99,16 @@ export function Deploy() {
       </div>, {
       duration: 5000,
     })
+
+    setIsOpen(false)
   }
 
   return <>
-    {/* Open the modal using document.getElementById('ID').showModal() method */}
-    <button className="btn btn-primary btn-sm" onClick={() => openModal()}>Deploy</button>
+    {/* Open the modal using document.getElementById('ID').isOpen() method */}
+    <button className="btn btn-primary btn-sm" onClick={() => setIsOpen(true)}>Deploy</button>
 
-    <dialog id="deploy_btn_modal" className="modal">
+    <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
       <div className="modal-box">
-
-        <div className="modal-action w-full">
           <form method="dialog" className="w-full" onSubmit={(e) => handleDeploy()}>
             <section className="flex items-center mb-6">
               <p className="w-1/2 text-xl">Protocol</p>
@@ -132,11 +129,10 @@ export function Deploy() {
 
             <div className="grid grid-cols-2 gap-3 w-full">
               {/* if there is a button in form, it will close the modal */}
-              <button className="btn btn-outline mr-2 w-full">Cancel</button>
+              <button type="button" className="btn btn-outline mr-2 w-full" onClick={() => setIsOpen(false)}>Cancel</button>
               <button type="submit" className="btn btn-primary w-full">Deploy</button>
             </div>
           </form>
-        </div>
       </div>
     </dialog>
   </>
