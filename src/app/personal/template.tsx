@@ -3,10 +3,12 @@
 import { RefreshButton } from "@/components/RefreshButton"
 import { log } from "@/libs"
 import { usePathname, useRouter } from "next/navigation"
+import { useAccount } from "wagmi"
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
+  const { isConnected } = useAccount()
 
   const activeClassName = (link: string) => {
     return pathname.startsWith(link) ? 'tab tab-active' : 'tab'
@@ -22,8 +24,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
     </header>
 
     <div className="pt-8">
-      {children}
+      {
+        isConnected ? children : <div role="alert" className="alert alert-warning w-1/3 text-white mx-auto">Please connect wallet!</div>
+      }
     </div>
-
   </div>
 }

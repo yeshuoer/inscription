@@ -3,11 +3,10 @@
 import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
 import { fetchAddress, fetchRecords } from "@/libs/api";
-import { RefreshButton } from '@/components/RefreshButton';
 import { Transfer } from './Tansfer'
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
-import { useAutoConnectForTransaction } from '@/hooks/useAutoConnectForTransaction';
+import { List } from './List';
 
 interface ListItem {
   tick: string;
@@ -15,20 +14,16 @@ interface ListItem {
 }
 
 export default function PersonalInscriptionsPage() {
+  const {address, isConnected} = useAccount()
   const [list, setList] = useState<ListItem[]>([])
-  const {ensureConnected} = useAutoConnectForTransaction()
 
   useEffect(() => {
     init()
-  }, [])
+  }, [address, isConnected])
 
   const init = async () => {
-    const {
-      connected,
-      account,
-    } = await ensureConnected()
-    if (account) {
-      const data = await fetchAddress(account)
+    if (isConnected && address) {
+      const data = await fetchAddress(address)
       setList(data.data)
     }
   }
@@ -46,7 +41,7 @@ export default function PersonalInscriptionsPage() {
 
               <div className="bg-base-100 flex justify-between rounded-bl-2xl rounded-br-2xl py-4 px-6">
                 <Transfer tick={item.tick} amt={item.amt} />
-                <button>List</button>
+                <List tick={item.tick} amt={item.amt} />
               </div>
             </div>
           </div>

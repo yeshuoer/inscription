@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
 import { fetchRecords } from "@/libs/api";
 import { useEffect, useState } from 'react';
-import { useAutoConnectForTransaction } from '@/hooks/useAutoConnectForTransaction';
+import { useAccount } from 'wagmi';
 
 enum ASC20Operation {
   Deploy = 'deploy',
@@ -42,19 +42,15 @@ const formatContent = (item: ASC20Record) => {
 }
 
 export default function PersonalInscriptionsPage() {
+  const { address, isConnected } = useAccount()
   const [list, setList] = useState<ASC20Record[]>([])
-  const {ensureConnected} = useAutoConnectForTransaction()
   
   useEffect(() => {
     init()
-  }, [])
+  }, [isConnected])
   
   const init = async () => {
-    const {
-      connected,
-      account,
-    } = await ensureConnected()
-    if (account) {
+    if (isConnected) {
       const data = await fetchRecords(100000000)
       setList(data.data)
     }

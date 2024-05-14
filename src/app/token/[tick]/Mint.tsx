@@ -19,7 +19,7 @@ interface Props {
 export function Mint({ detail }: Props) {
   const { sendTransactionAsync } = useSendTransaction()
   const { signTypedDataAsync } = useSignTypedData()
-  const {ensureConnected} = useAutoConnectForTransaction()
+  const {ensureConnected, accountRef} = useAutoConnectForTransaction()
 
   const getCalldataContent = () => {
     const amt = detail.max - detail.minted > detail.limit ? detail.limit : detail.max - detail.minted
@@ -35,12 +35,9 @@ export function Mint({ detail }: Props) {
   }
 
   const handleMint = async () => {
-    const {
-      connected,
-      account,
-    } = await ensureConnected()
+    await ensureConnected()
 
-    if (!connected || !account) {
+    if (!accountRef.current.isConnected || !accountRef.current.address) {
       toast.error('Please connect your wallet.')
       return
     }
@@ -64,19 +61,19 @@ export function Mint({ detail }: Props) {
       primaryType: 'Confirm',
       message: {
         'Wallet used': {
-          address: account,
+          address: accountRef.current.address,
         },
         'Interact with': {
-          address: account,
+          address: accountRef.current.address,
         },
         data: calldata,
         utf8: calldataContent,
       },
     })
-
+    
     // send tx
     const txhash = await sendTransactionAsync({
-      to: account,
+      to: accountRef.current.address,
       value: BigInt(0),
       data: calldata,
     }, {
