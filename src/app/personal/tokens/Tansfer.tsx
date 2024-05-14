@@ -16,7 +16,7 @@ export function Transfer({
   tick,
   amt,
 }: Props) {
-  const { ensureConnected } = useAutoConnectForTransaction()
+  const { ensureConnected, accountRef } = useAutoConnectForTransaction()
   const { sendTransactionAsync } = useSendTransaction()
   const { signTypedDataAsync } = useSignTypedData()
 
@@ -46,12 +46,9 @@ export function Transfer({
       return
     }
 
-    const {
-      connected,
-      account,
-    } = await ensureConnected()
+    await ensureConnected()
 
-    if (!connected || !account) {
+    if (!accountRef.current.isConnected || !accountRef.current.address) {
       toast.error('Please connect your wallet.')
       return
     }
@@ -75,7 +72,7 @@ export function Transfer({
       primaryType: 'Transfer',
       message: {
         'Wallet used': {
-          address: account,
+          address: accountRef.current.address,
         },
         'Transfer to': {
           address: toAddress as `0x${string}`,
