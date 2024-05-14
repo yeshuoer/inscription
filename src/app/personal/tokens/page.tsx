@@ -21,7 +21,7 @@ export default function PersonalInscriptionsPage() {
   useEffect(() => {
     init()
   }, [])
-  
+
   const init = async () => {
     const {
       connected,

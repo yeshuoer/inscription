@@ -1,7 +1,10 @@
+'use client'
+
 import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
 import { fetchRecords } from "@/libs/api";
-import { RefreshButton } from '@/components/RefreshButton';
+import { useEffect, useState } from 'react';
+import { useAutoConnectForTransaction } from '@/hooks/useAutoConnectForTransaction';
 
 enum ASC20Operation {
   Deploy = 'deploy',
@@ -38,9 +41,24 @@ const formatContent = (item: ASC20Record) => {
   return r
 }
 
-export default async function PersonalInscriptionsPage() {
-  const data = await fetchRecords(100000000)
-  const list = data.data as ASC20Record[]
+export default function PersonalInscriptionsPage() {
+  const [list, setList] = useState<ASC20Record[]>([])
+  const {ensureConnected} = useAutoConnectForTransaction()
+  
+  useEffect(() => {
+    init()
+  }, [])
+  
+  const init = async () => {
+    const {
+      connected,
+      account,
+    } = await ensureConnected()
+    if (account) {
+      const data = await fetchRecords(100000000)
+      setList(data.data)
+    }
+  }
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between">
