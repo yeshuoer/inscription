@@ -2,11 +2,12 @@
 
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
 import { log } from "@/libs";
-import { fetchOrder } from "@/libs/action";
+import { fetchOrderByListId } from "@/libs/action";
 import { ASC20Operation } from "@/types"
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { toHex } from "viem";
+import { Address, numberToHex, parseEther, parseSignature, toBytes, toHex } from "viem";
+import { sepolia } from "viem/chains";
 import { useSendTransaction, useSignTypedData } from "wagmi"
 
 interface Props {
@@ -38,10 +39,60 @@ export function List({
     return s
   }
 
+  const handleSignature = async (txhash: Address) => {
+    const listingTime = BigInt(Math.floor(Date.now() / 1000))
+    const expirationTime = BigInt(4871333268)
+
+    const message = {
+      seller: accountRef.current.address as Address,
+      creator: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
+      listId: txhash,
+      ticker: tick,
+      amount: BigInt(amount),
+      price: BigInt(parseEther(price)),
+      nonce: BigInt(0),
+      listingTime,
+      expirationTime,
+      creatorFeeRate: 200,
+      salt: 0,
+      extraParams: toHex(0),
+    }
+
+    // eip712 sign
+    const signature = await signTypedDataAsync({
+      domain:{
+          "name": "ASC20Market",
+          "version": "1.0",
+          "chainId": sepolia.id,
+          "verifyingContract": process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
+      },
+      types: {
+        ASC20Order: [
+          { name: 'seller', type: 'address' },
+          { name: 'creator', type: 'address' },
+          { name: 'listId', type: 'bytes32' },
+          { name: 'ticker', type: 'string' },
+          { name: 'amount', type: 'uint256' },
+          { name: 'price', type: 'uint256' },
+          { name: 'nonce', type: 'uint256' },
+          { name: 'listingTime', type: 'uint64' },
+          { name: 'expirationTime', type: 'uint64' },
+          { name: 'creatorFeeRate', type: 'uint16' },
+          { name: 'salt', type: 'uint32' },
+          { name: 'extraParams', type: 'bytes' },
+        ]
+      },
+      primaryType: 'ASC20Order',
+      message,
+    })
+
+    return {
+      signature,
+      message,
+    }
+  }
+
   const handleTransfer = async () => {
-    fetchOrder()
-    log('调用了')
-    return
     if (Number(amount) > amt) {
       toast.error('Token is not enough!')
       return
@@ -56,32 +107,6 @@ export function List({
 
     const calldataContent = getCalldataContent()
     const calldata = toHex(calldataContent)
-
-    // eip712 sign
-    const signature = await signTypedDataAsync({
-      types: {
-        Address: [
-          { name: 'address', type: 'address' },
-        ],
-        List: [
-          { name: 'Wallet used', type: 'Address' },
-          { name: 'Interect with', type: 'Address' },
-          { name: 'data', type: 'string' },
-          { name: 'utf8', type: 'string' },
-        ]
-      },
-      primaryType: 'List',
-      message: {
-        'Wallet used': {
-          address: accountRef.current.address,
-        },
-        'Interect with': {
-          address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
-        },
-        data: calldata,
-        utf8: calldataContent,
-      },
-    })
 
     // send tx
     const txhash = await sendTransactionAsync({
@@ -101,6 +126,13 @@ export function List({
       </div>, {
       duration: 5000,
     })
+
+    const {
+      message,
+      signature
+    } = await handleSignature(txhash)
+    log('srv', parseSignature(signature))
+    log('message', message)
 
     setIsOpen(false)
   }
