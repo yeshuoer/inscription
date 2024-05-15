@@ -1,6 +1,8 @@
 'use client'
 
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
+import { log } from "@/libs";
+import { fetchOrder } from "@/libs/action";
 import { ASC20Operation } from "@/types"
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -37,6 +39,9 @@ export function List({
   }
 
   const handleTransfer = async () => {
+    fetchOrder()
+    log('调用了')
+    return
     if (Number(amount) > amt) {
       toast.error('Token is not enough!')
       return
