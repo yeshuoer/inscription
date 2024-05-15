@@ -8,6 +8,7 @@ import { toHex } from "viem"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
+import clsx from "clsx"
 
 export function Deploy() {
   const router = useRouter()
@@ -103,7 +104,12 @@ export function Deploy() {
     {/* Open the modal using document.getElementById('ID').isOpen() method */}
     <button className="btn btn-primary btn-sm" onClick={() => setIsOpen(true)}>Deploy</button>
 
-    <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
+    <dialog 
+      className={clsx([
+        'modal',
+        isOpen && 'modal-open',
+      ])}
+    >
       <div className="modal-box">
         <form method="dialog" className="w-full" onSubmit={(e) => handleDeploy()}>
           <section className="flex items-center mb-6">

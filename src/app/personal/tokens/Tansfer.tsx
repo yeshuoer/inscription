@@ -2,6 +2,7 @@
 
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
 import { ASC20Operation } from "@/types"
+import clsx from "clsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { toHex } from "viem";
@@ -107,7 +108,12 @@ export function Transfer({
   return <>
     <button className="btn btn-outline btn-primary" onClick={() => setIsOpen(true)}>Transfer</button>
 
-    <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
+    <dialog 
+      className={clsx([
+        'modal',
+        isOpen && 'modal-open',
+      ])}
+    >
       <div className="modal-box">
         <div className="flex justify-start items-center text-xl">
           Transfer
