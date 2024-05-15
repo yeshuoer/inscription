@@ -1,9 +1,5 @@
 import { log } from "."
 
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export const fetchRecords = async (toBlock: number) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_GO_API}/records?fromBlock=1&toBlock=${toBlock}`)
   const data = await res.json()

@@ -106,7 +106,7 @@ export function Transfer({
   }
 
   return <>
-    <button className="btn btn-outline btn-primary" onClick={() => setIsOpen(true)}>Transfer</button>
+    <button className="btn btn-outline btn-primary mr-2" onClick={() => setIsOpen(true)}>Transfer</button>
 
     <dialog 
       className={clsx([

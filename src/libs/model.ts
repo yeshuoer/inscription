@@ -26,4 +26,4 @@ export interface IOrder {
   }
 }
 
-export const Order = model('order', orderSchema, 'orders')
+export const Order = mongoose.models?.order || model('order', orderSchema, 'orders')

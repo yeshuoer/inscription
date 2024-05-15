@@ -2,8 +2,8 @@
 
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
 import { log } from "@/libs";
-import { fetchOrderByListId } from "@/libs/action";
 import { ASC20Operation } from "@/types"
+import clsx from "clsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Address, numberToHex, parseEther, parseSignature, toBytes, toHex } from "viem";
@@ -92,7 +92,16 @@ export function List({
     }
   }
 
-  const handleTransfer = async () => {
+  const handleList = async () => {
+    const res = await fetch('/api/order', {
+      method: 'POST',
+      body: JSON.stringify({
+        listId: '0x49f2954034f8fe56cb414ed6bc89b8be942e61dfa0b61ebd1b347fd222e2c725'
+      })
+    })
+    const data = await res.json()
+    log('dd', data)
+    return
     if (Number(amount) > amt) {
       toast.error('Token is not enough!')
       return
@@ -138,9 +147,14 @@ export function List({
   }
 
   return <>
-    <button className="btn btn-outline btn-primary" onClick={() => setIsOpen(true)}>List</button>
+    <button className="btn btn-outline btn-primary ml-2" onClick={() => setIsOpen(true)}>List</button>
 
-    <dialog className={`modal ${isOpen ? 'modal-open' : ''}`}>
+    <dialog 
+      className={clsx([
+        'modal',
+        isOpen && 'modal-open',
+      ])}
+    >
       <div className="modal-box">
         <div className="flex justify-start items-center text-xl">
           List
@@ -156,19 +170,22 @@ export function List({
           </div>
         </div>
 
-        <form method="dialog" className="w-full" onSubmit={() => handleTransfer()}>
+        <form method="dialog" className="w-full" onSubmit={() => handleList()}>
           <section className="flex items-center mb-6">
             <p className="w-1/2 text-xl">Price</p>
-            <input required={isOpen} type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <input required={isOpen} type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="grow" placeholder="" />
+              ETH
+            </label>
+          </section>
+          <section className="flex items-center mb-6">
+            <p className="w-1/2 text-xl">Amount</p>
+            <input required={isOpen} type="number" value={amount} max={amt} onChange={(e) => setAmount(e.target.value)} placeholder="" className="input input-bordered w-full max-w-xs" />
           </section>
 
           <section className="flex items-center mb-6">
-            <p className="w-1/2 text-xl">Amount</p>
-            <input required={isOpen} type="number" value={amount} max={amt} onChange={(e) => setAmount(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-          </section>
-          <section className="flex items-center mb-6">
             <p className="w-1/2 text-xl">Total Revenue</p>
-            <p></p>
+            <p className="text-right text-2xl text-primary">{Number(price) * Number(amount)} ETH</p>
           </section>
 
           <div className="grid grid-cols-2 gap-3 w-full">
