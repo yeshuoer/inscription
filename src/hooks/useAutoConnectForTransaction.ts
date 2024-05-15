@@ -21,8 +21,7 @@ export function useAutoConnectForTransaction() {
   useEffect(() => {
     accountRef.current.address = address
     accountRef.current.isConnected = isConnected
-    accountRef.current
-  }, [isConnected, chainId])
+  }, [isConnected, chainId, address])
 
   const ensureConnected = async () => {
     let result = true

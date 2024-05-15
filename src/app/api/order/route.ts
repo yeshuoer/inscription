@@ -14,7 +14,7 @@ export async function GET(request: Request) {
 }
 
 const keepLookUntilExist = async (listId: Address, times: number): Promise<boolean> => {
-  if (times > 15) {
+  if (times > 100) {
     return false
   }
 

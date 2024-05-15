@@ -42,6 +42,7 @@ export function List({
   const handleSignature = async (txhash: Address) => {
     const listingTime = BigInt(Math.floor(Date.now() / 1000))
     const expirationTime = BigInt(4871333268)
+    log('listing seller is', accountRef.current.address)
 
     const message = {
       seller: accountRef.current.address as Address,
