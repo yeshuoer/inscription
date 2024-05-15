@@ -1,11 +1,11 @@
 import mongoose from 'mongoose'
 
 export const orderSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        // 唯一索引
-        unique: true
-    },
+    // id: {
+    //     type: String,
+    //     // 唯一索引
+    //     unique: true
+    // },
     seller: String, // 0x
     creator: String,    // 0x contract address
     listId: {

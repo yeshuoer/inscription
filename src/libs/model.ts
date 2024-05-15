@@ -3,7 +3,7 @@ import { orderSchema } from './schema'
 
 // unused
 export interface IOrder {
-  id: mongoose.Types.ObjectId;
+  // id: mongoose.Types.ObjectId;
   seller: `0x${string}`;
   creator: `0x${string}`;
   listId: `0x${string}`;

@@ -92,16 +92,47 @@ export function List({
     }
   }
 
-  const handleList = async () => {
+  const handleCreateOrder = async (listId: Address, signature: `0x${string}`, message: Record<string, any>) => {
+    log('create p', listId, parseSignature(signature))
+    log('message', message)
+    const {
+      v,
+      r,
+      s,
+    } = parseSignature(signature)
+    const inputJson = {
+      ...message,
+      amount: toHex(message.amount),
+      expirationTime: Number(message.expirationTime),
+      listingTime: Number(message.listingTime),
+      nonce: '0',
+      price: toHex(message.price),
+    }
+    const input = JSON.stringify(inputJson)
+    const postData = {
+      ...inputJson,
+      status: 1,
+      signature,
+      input,
+      vrs: {
+        v: Number(v),
+        r,
+        s,
+      },
+    }
+
     const res = await fetch('/api/order', {
       method: 'POST',
-      body: JSON.stringify({
-        listId: '0x49f2954034f8fe56cb414ed6bc89b8be942e61dfa0b61ebd1b347fd222e2c725'
-      })
+      body: JSON.stringify(postData)
     })
     const data = await res.json()
-    log('dd', data)
-    return
+    log('final data', data)
+    if (data) {
+      toast.success('List success!')
+    }
+  }
+
+  const handleList = async () => {
     if (Number(amount) > amt) {
       toast.error('Token is not enough!')
       return
@@ -119,7 +150,7 @@ export function List({
 
     // send tx
     const txhash = await sendTransactionAsync({
-      to: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+      to: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
       value: BigInt(0),
       data: calldata,
     }, {
@@ -140,8 +171,8 @@ export function List({
       message,
       signature
     } = await handleSignature(txhash)
-    log('srv', parseSignature(signature))
-    log('message', message)
+
+    handleCreateOrder(txhash, signature, message)
 
     setIsOpen(false)
   }
