@@ -1,10 +1,8 @@
 import { Address } from "viem";
 
-export type ServerSideComponentProps<T> = {
-  params: T,
-  searchParams?: {
-    [key: string]: string;
-  };
+export type ServerSideComponentProps<T=undefined, K=undefined> = {
+  params?: T,
+  searchParams?: K;
 }
 
 export enum ASC20Operation {

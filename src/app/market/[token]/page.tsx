@@ -19,7 +19,11 @@ export default async function MarketTokenPage({
   params: {
     token
   }
-}: ServerSideComponentProps<{token: string;}>) {
+}: {
+  params: {
+    token: string;
+  }
+}) {
   const res = await fetch(`${process.env.API_BASE_URL}/api/order?ticker=${token}`, {
     method: 'GET',
   })
@@ -37,8 +41,8 @@ export default async function MarketTokenPage({
               <p className="text-center text-3xl my-6">{Number(item.amount)}</p>
               <p className="text-center">{formatEther(BigInt(item.price))} ETH / Per Mint</p>
               <div>
+              </div>
             </div>
-          </div>
 
             <div className="bg-base-100 rounded-bl-2xl rounded-br-2xl py-4 px-4">
               <div className="text-primary flex justify-between items-center mb-4">

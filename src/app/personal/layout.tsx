@@ -3,12 +3,14 @@
 import { RefreshButton } from "@/components/RefreshButton"
 import { log } from "@/libs"
 import { usePathname, useRouter } from "next/navigation"
+import { useState } from "react"
 import { useAccount } from "wagmi"
 
 export default function Template({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const { isConnected } = useAccount()
+  const [refreshKey, setRefreshKey] = useState(Date.now())
 
   const activeClassName = (link: string) => {
     return pathname.startsWith(link) ? 'tab tab-active' : 'tab'
@@ -20,13 +22,13 @@ export default function Template({ children }: { children: React.ReactNode }) {
         <li role='tab' className={activeClassName('/personal/tokens')} onClick={() => router.push('/personal/tokens')}>Tokens</li>
         <li role='tab' className={activeClassName('/personal/inscriptions')} onClick={() => router.push('/personal/inscriptions')}>Inscriptions</li>
       </ul>
-      <RefreshButton />
+      <RefreshButton onClick={() => setRefreshKey(Date.now())} />
     </header>
 
     {/* {
       !isConnected && <div role="alert" className="alert alert-warning w-1/3 text-white mx-auto">Please connect wallet!</div>
     } */}
-    <div className="pt-8">
+    <div className="pt-8" key={refreshKey}>
       {children}
     </div>
   </div>

@@ -8,11 +8,17 @@ import { useRouter } from "next/navigation";
  * call router.refresh()
  * @returns 
  */
-export function RefreshButton() {
+export function RefreshButton(props: {
+  onClick?: Function,
+}) {
   const router = useRouter()
 
   const handleRefresh = () => {
-    router.refresh()
+    if (props.onClick) {
+      props.onClick()
+    } else {
+      router.refresh()
+    }
   }
 
   return <button className="flex items-center cursor-pointer" onClick={handleRefresh}>
