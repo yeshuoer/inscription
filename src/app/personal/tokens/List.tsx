@@ -2,7 +2,7 @@
 
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
 import { log } from "@/libs";
-import { ASC20Operation } from "@/types"
+import { ASC20Operation, OrderStatus } from "@/types"
 import clsx from "clsx";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -112,7 +112,7 @@ export function List({
     const input = JSON.stringify(inputJson)
     const postData = {
       ...inputJson,
-      status: 1,
+      status: OrderStatus.Listing,
       signature,
       input,
       vrs: {

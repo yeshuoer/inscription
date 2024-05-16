@@ -3,9 +3,11 @@
 import { log } from "@/libs";
 import { list } from "postcss";
 import { useEffect, useState } from "react";
-import { Address, parseEther, toHex } from "viem";
+import { Address, formatEther, hexToBigInt, parseEther, toHex } from "viem";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import {abi} from '@/libs/abi'
+import { abi } from '@/libs/abi'
+import Link from "next/link";
+import Image from "next/image";
 
 interface IOrderType {
   seller: Address;
@@ -27,12 +29,19 @@ interface IOrderType {
   }
 }
 
+
+interface IMarketToken {
+  _id: string;
+  floorPrice: `0x${string}`;
+  listingNum: number;
+}
+
 export default function MarketPage() {
   const [list, setList] = useState([])
-  const {address} = useAccount()
+  const { address } = useAccount()
 
-  const {data: hash, writeContractAsync} = useWriteContract()
-  const {isLoading: isConfirming, isSuccess: isConfirmed} = useWaitForTransactionReceipt({
+  const { data: hash, writeContractAsync } = useWriteContract()
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
     hash
   })
 
@@ -41,7 +50,7 @@ export default function MarketPage() {
   }, [])
 
   const fetchData = async () => {
-    const res = await fetch('/api/order')
+    const res = await fetch('/api/market')
     const data = await res.json()
     const list = data.data
     log('list', list)
@@ -74,7 +83,7 @@ export default function MarketPage() {
     } = item
 
     const sendWei = BigInt(amount) * BigInt(price)
-    
+
     const txhash = await writeContractAsync({
       address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
       abi,
@@ -123,7 +132,7 @@ export default function MarketPage() {
         s,
       },
     } = item
-    
+
     const txhash = await writeContractAsync({
       address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
       abi,
@@ -161,6 +170,36 @@ export default function MarketPage() {
         isConfirmed && <div className="alert alert-success">Transaction confirmed.</div>
       }
     </div>
+
+    <table className="table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Floor Price(ETH)</th>
+          <th>Progress</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {
+          list.map((item: IMarketToken, index: number) => {
+            return <tr key={item._id}>
+              <td className="text-primary font-bold italic text-l">{item._id}</td>
+              <td>{formatEther(BigInt(item.floorPrice))}</td>
+              <td>
+                123
+              </td>
+              <td>
+                <Link href={`/token`}>
+                  <Image src="/circle-right.svg" alt="arrow-right" width={20} height={20} />
+                </Link>
+              </td>
+            </tr>
+          })
+        }
+      </tbody>
+    </table>
 
     <ul>
       {
