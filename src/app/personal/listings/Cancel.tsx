@@ -5,6 +5,7 @@ import { log } from "@/libs"
 import { abi } from "@/libs/abi"
 import { changeOrderStatus } from "@/libs/api"
 import { IOrderType, OrderStatus } from "@/types"
+import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Address } from "viem"
 import { useAccount, useWriteContract } from "wagmi"
@@ -15,11 +16,19 @@ export function CancelButton({
   orderItem: IOrderType
 }) {
   const { writeContractAsync, isSuccess, isPending } = useWriteContract()
+  const router = useRouter()
 
   useEffect(() => {
-    if (isSuccess) {
-      changeOrderStatus(orderItem.listId, OrderStatus.Listing)
+    const fn = async () => {
+      if (isSuccess) {
+        const res = await changeOrderStatus(orderItem.listId, OrderStatus.Canceled)
+        const data = await res.json()
+        if (data.data) {
+          router.refresh()
+        }
+      }
     }
+    fn()
   }, [isSuccess])
 
   const handleCancelOrder = async (item: IOrderType) => {

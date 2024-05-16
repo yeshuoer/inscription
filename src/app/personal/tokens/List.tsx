@@ -1,5 +1,6 @@
 'use client'
 
+import Loading from "@/components/Loading";
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
 import { log } from "@/libs";
 import { ASC20Operation, OrderStatus } from "@/types"
@@ -22,11 +23,11 @@ export function List({
   const { ensureConnected, accountRef } = useAutoConnectForTransaction()
   const { sendTransactionAsync } = useSendTransaction()
   const { signTypedDataAsync } = useSignTypedData()
-  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt()
 
   const [price, setPrice] = useState('')
   const [amount, setAmount] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const getCalldataContent = () => {
     const o = {
@@ -123,14 +124,20 @@ export function List({
       },
     }
 
-    const res = await fetch('/api/order', {
-      method: 'POST',
-      body: JSON.stringify(postData)
-    })
-    const data = await res.json()
-    log('final data', data)
-    if (data) {
-      toast.success('List success!')
+    try {
+      setIsLoading(true)
+      const res = await fetch('/api/order', {
+        method: 'POST',
+        body: JSON.stringify(postData)
+      })
+      const data = await res.json()
+      if (data) {
+        toast.success('List success!')
+      }
+    } catch(err) {
+      toast.error((err as Error).message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -180,6 +187,10 @@ export function List({
   }
 
   return <>
+    {
+      isLoading && <Loading />
+    }
+
     <button className="btn btn-outline btn-primary ml-2" onClick={() => setIsOpen(true)}>List</button>
 
     <dialog

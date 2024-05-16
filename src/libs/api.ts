@@ -26,10 +26,12 @@ export const fetchAddress = async (address: string) => {
   const data = await res.json()
   let list: any[] = []
   Object.entries(data.data).map(([key, value]) => {
-    list.push({
-      tick: key,
-      amt: value,
-    })
+    if (Number(value) > 0) {
+      list.push({
+        tick: key,
+        amt: value,
+      })
+    }
   })
   data.data = list
   return data

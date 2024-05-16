@@ -47,7 +47,7 @@ export default function MarketListingPage() {
             <div key={item.listId} className="card bg-secondary bg-opacity-85 shadow-xl min-w-56 ring-base-100">
               <div className="card-body w-full h-70 p-0 text-white">
                 <div className="p-4">
-                  <p className='badge p-3 text-primary'>{orderStatusName(item.status)}</p>
+                  <p className='badge p-3 text-primary'>{item.ticker}</p>
                   <p className="text-center text-3xl my-6">{Number(item.amount)}</p>
                   <p className="text-center">{formatEther(BigInt(item.price))} ETH / Per Mint</p>
                   <div>

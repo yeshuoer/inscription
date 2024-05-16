@@ -5,6 +5,7 @@ import { log } from "@/libs"
 import { abi } from "@/libs/abi"
 import { changeOrderStatus } from "@/libs/api"
 import { IOrderType, OrderStatus } from "@/types"
+import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Address } from "viem"
 import { useAccount, useWriteContract } from "wagmi"
@@ -16,11 +17,19 @@ export function BuyButton({
 }) {
   const { address } = useAccount()
   const { data: hash, writeContractAsync, isSuccess, isPending } = useWriteContract()
+  const router = useRouter()
 
   useEffect(() => {
-    if (isSuccess) {
-      changeOrderStatus(orderItem.listId, OrderStatus.Sold)
+    const fn = async () => {
+      if (isSuccess) {
+        const res = await changeOrderStatus(orderItem.listId, OrderStatus.Sold)
+        const data = await res.json()
+        if (data.data) {
+          router.refresh()
+        }
+      }
     }
+    fn()
   }, [isSuccess])
 
   const handleExcuteOrder = async (item: IOrderType) => {

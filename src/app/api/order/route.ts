@@ -7,7 +7,7 @@ import { Address } from "viem"
 interface IFilter {
   ticker?: string;
   seller?: Address;
-  stauts?: OrderStatus;
+  status?: OrderStatus;
 }
 
 export async function GET(request: Request) {
@@ -24,10 +24,10 @@ export async function GET(request: Request) {
   }
   const status = searchParams.get('status')
   if (status) {
-    o.stauts = Number(status) as OrderStatus
+    o.status = Number(status)
   }
+  log('o', o)
   const data = await Order.find(o)
-  log('haha',  data)
   return Response.json({ data })
 }
 
