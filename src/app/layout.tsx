@@ -25,7 +25,7 @@ export default function RootLayout({
           <div className="py-24 px-6">
             <GlobalHeader />
             <Toaster />
-              {children}
+            {children}
           </div>
         </Providers>
       </body>

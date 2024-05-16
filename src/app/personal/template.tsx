@@ -23,10 +23,11 @@ export default function Template({ children }: { children: React.ReactNode }) {
       <RefreshButton />
     </header>
 
+    {/* {
+      !isConnected && <div role="alert" className="alert alert-warning w-1/3 text-white mx-auto">Please connect wallet!</div>
+    } */}
     <div className="pt-8">
-      {
-        isConnected ? children : <div role="alert" className="alert alert-warning w-1/3 text-white mx-auto">Please connect wallet!</div>
-      }
+      {children}
     </div>
   </div>
 }

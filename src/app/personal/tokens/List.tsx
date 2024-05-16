@@ -8,7 +8,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Address, numberToHex, parseEther, parseSignature, toBytes, toHex } from "viem";
 import { sepolia } from "viem/chains";
-import { useSendTransaction, useSignTypedData } from "wagmi"
+import { useSendTransaction, useSignTypedData, useWaitForTransactionReceipt } from "wagmi"
 
 interface Props {
   tick: string;
@@ -22,6 +22,7 @@ export function List({
   const { ensureConnected, accountRef } = useAutoConnectForTransaction()
   const { sendTransactionAsync } = useSendTransaction()
   const { signTypedDataAsync } = useSignTypedData()
+  const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt()
 
   const [price, setPrice] = useState('')
   const [amount, setAmount] = useState('')
@@ -61,11 +62,11 @@ export function List({
 
     // eip712 sign
     const signature = await signTypedDataAsync({
-      domain:{
-          "name": "ASC20Market",
-          "version": "1.0",
-          "chainId": sepolia.id,
-          "verifyingContract": process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
+      domain: {
+        "name": "ASC20Market",
+        "version": "1.0",
+        "chainId": sepolia.id,
+        "verifyingContract": process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
       },
       types: {
         ASC20Order: [
@@ -179,9 +180,15 @@ export function List({
   }
 
   return <>
+    {
+      isConfirming && <div className="alert alert-info">Waiting for confirmation...</div>
+    }
+    {
+      isConfirmed && <div className="alert alert-success">Transaction confirmed.</div>
+    }
     <button className="btn btn-outline btn-primary ml-2" onClick={() => setIsOpen(true)}>List</button>
 
-    <dialog 
+    <dialog
       className={clsx([
         'modal',
         isOpen && 'modal-open',
@@ -196,7 +203,7 @@ export function List({
         </div>
 
         <div className="w-full flex justify-center items-center pt-6 pb-10">
-          <div className="border-2 border-secondary rounded-2xl px-4 pt-2">
+          <div className="border-2 border-primary rounded-2xl px-4 pt-2">
             <p className="badge text-primary border-primary">{tick}</p>
             <p className="text-3xl font-bold m-8 text-primary">{amt}</p>
           </div>

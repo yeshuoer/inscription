@@ -2,7 +2,6 @@ import { log, sleep } from "@/libs"
 import { connectToMongoDB } from "@/libs/db"
 import { Order } from "@/libs/model"
 import { OrderStatus } from "@/types"
-import { Address } from "viem"
 
 export async function GET(request: Request) {
   await connectToMongoDB()
