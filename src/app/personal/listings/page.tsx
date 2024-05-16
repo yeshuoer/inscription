@@ -1,10 +1,11 @@
+'use client'
+
 import { log, orderStatusName } from "@/libs"
-import { IOrderType, OrderStatus, ServerSideComponentProps } from "@/types"
-import { Address, formatEther, hexToBigInt } from "viem";
-import { BuyButton } from "./Buy";
-import Link from "next/link";
-import Image from "next/image";
-import { RefreshButton } from "@/components/RefreshButton";
+import { IOrderType, OrderStatus } from "@/types"
+import { Address, formatEther } from "viem";
+import { useAccount } from "wagmi";
+import { useEffect, useState } from "react";
+import { CancelButton } from "./Cancel";
 
 interface ITokenItem {
   ticker: string;
@@ -19,32 +20,27 @@ const totalEther = (item: ITokenItem) => {
   return formatEther(r)
 }
 
-export default async function MarketTokenPage({
-  params: {
-    token
-  }
-}: {
-  params: {
-    token: string;
-  }
-}) {
-  const res = await fetch(`${process.env.API_BASE_URL}/api/order?ticker=${token}`, {
-    method: 'GET',
-  })
-  const data = await res.json()
-  const list = data.data as any[]
-  log('list', list)
-  return <div>
-    <header className="flex items-center justify-between mb-6">
-        <div className="flex items-center">
-          <Link href='/market'>
-            <Image src='/arrow-back.svg' width={18} height={18} alt={'token'} />
-          </Link>
-          <p className="text-primary font-bold italic text-3xl ml-4">{token}</p>
-        </div>
-        <RefreshButton />
-      </header>
+export default function MarketListingPage() {
+  const {address, isConnected} = useAccount()
+  const [list, setList] = useState<ITokenItem[]>([])
 
+  useEffect(() => {
+    init()
+  }, [address, isConnected])
+
+  const init = async () => {
+    if (isConnected && address) {
+      const res = await fetch(`/api/order?seller=${address}&status=${OrderStatus.Listing}`, {
+        method: 'GET',
+      })
+      const data = await res.json()
+      setList(data.data)
+    }
+  }
+  return <div>
+    {
+      list.length === 0 && <p className="text-center">No data</p>
+    }
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 justify-between">
         {list.map((item: ITokenItem, index) => {
           return (
@@ -63,7 +59,7 @@ export default async function MarketTokenPage({
                     <p>Total</p>
                     <p className="text-right font-bold">{totalEther(item)} ETH</p>
                   </div>
-                  <BuyButton orderItem={item as IOrderType} />
+                  <CancelButton orderItem={item as IOrderType} />
                 </div>
               </div>
             </div>

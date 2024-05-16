@@ -1,21 +1,33 @@
 import { log, sleep } from "@/libs"
 import { connectToMongoDB } from "@/libs/db"
 import { Order } from "@/libs/model"
+import { OrderStatus } from "@/types";
 import { Address } from "viem"
 
 interface IFilter {
   ticker?: string;
+  seller?: Address;
+  stauts?: OrderStatus;
 }
 
 export async function GET(request: Request) {
   await connectToMongoDB()
   const { searchParams } = new URL(request.url)
   const o: IFilter = {}
-  let ticker = searchParams.get('ticker')
+  const ticker = searchParams.get('ticker')
   if (ticker) {
     o.ticker = ticker
   }
+  const seller = searchParams.get('seller')
+  if (seller) {
+    o.seller = seller as Address
+  }
+  const status = searchParams.get('status')
+  if (status) {
+    o.stauts = Number(status) as OrderStatus
+  }
   const data = await Order.find(o)
+  log('haha',  data)
   return Response.json({ data })
 }
 

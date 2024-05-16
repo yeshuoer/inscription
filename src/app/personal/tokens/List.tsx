@@ -180,12 +180,6 @@ export function List({
   }
 
   return <>
-    {
-      isConfirming && <div className="alert alert-info">Waiting for confirmation...</div>
-    }
-    {
-      isConfirmed && <div className="alert alert-success">Transaction confirmed.</div>
-    }
     <button className="btn btn-outline btn-primary ml-2" onClick={() => setIsOpen(true)}>List</button>
 
     <dialog

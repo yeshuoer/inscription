@@ -57,56 +57,6 @@ export default function MarketPage() {
     setList(list)
   }
 
-
-  const handleCancelOrder = async (item: IOrderType) => {
-    const {
-      seller,
-      creator,
-      listId,
-      ticker,
-      amount,
-      price,
-      nonce,
-      listingTime,
-      expirationTime,
-      creatorFeeRate,
-      salt,
-      extraParams,
-      vrs: {
-        v,
-        r,
-        s,
-      },
-    } = item
-
-    const txhash = await writeContractAsync({
-      address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
-      abi,
-      functionName: 'cancelOrder',
-      args: [{
-        seller,
-        creator,
-        listId,
-        ticker,
-        amount: BigInt(amount),
-        price: BigInt(price),
-        nonce: BigInt(nonce),
-        listingTime: BigInt(listingTime),
-        expirationTime: BigInt(expirationTime),
-        creatorFeeRate,
-        salt,
-        extraParams,
-        v,
-        r,
-        s,
-      }],
-    })
-    log('交易哈希', txhash)
-
-    // todo change status
-  }
-
-
   return <div>
     <div className="toast toast-top toast-center z-10">
       {

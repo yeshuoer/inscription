@@ -32,6 +32,7 @@ export interface IOrderType {
   creatorFeeRate: number;
   salt: number;
   extraParams: `0x${string}`;
+  status: OrderStatus;
   vrs: {
     v: number;
     r: `0x${string}`;

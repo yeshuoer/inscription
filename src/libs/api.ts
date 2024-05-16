@@ -1,4 +1,6 @@
+import { Address } from "viem"
 import { log } from "."
+import { OrderStatus } from "@/types"
 
 export const fetchRecords = async (toBlock: number) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_GO_API}/records?fromBlock=1&toBlock=${toBlock}`)
@@ -31,4 +33,15 @@ export const fetchAddress = async (address: string) => {
   })
   data.data = list
   return data
+}
+
+export const changeOrderStatus = async (listId: Address, status: OrderStatus) => {
+  const res = await fetch('/api/market/status', {
+   method: 'POST',
+   body: JSON.stringify({
+     listId,
+     status,
+   })
+ })
+ return res
 }

@@ -21,6 +21,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
       <ul role='tablist' className='tabs tabs-boxed'>
         <li role='tab' className={activeClassName('/personal/tokens')} onClick={() => router.push('/personal/tokens')}>Tokens</li>
         <li role='tab' className={activeClassName('/personal/inscriptions')} onClick={() => router.push('/personal/inscriptions')}>Inscriptions</li>
+        <li role='tab' className={activeClassName('/personal/listings')} onClick={() => router.push('/personal/listings')}>Listings</li>
       </ul>
       <RefreshButton onClick={() => setRefreshKey(Date.now())} />
     </header>
