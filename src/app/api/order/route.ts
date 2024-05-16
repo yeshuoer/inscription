@@ -3,13 +3,19 @@ import { connectToMongoDB } from "@/libs/db"
 import { Order } from "@/libs/model"
 import { Address } from "viem"
 
+interface IFilter {
+  ticker?: string;
+}
+
 export async function GET(request: Request) {
   await connectToMongoDB()
   const { searchParams } = new URL(request.url)
-  // const data = await Order.findOne({
-  //   listId: searchParams.get('listId')
-  // })
-  const data = await Order.find({})
+  const o: IFilter = {}
+  let ticker = searchParams.get('ticker')
+  if (ticker) {
+    o.ticker = ticker
+  }
+  const data = await Order.find(o)
   return Response.json({ data })
 }
 

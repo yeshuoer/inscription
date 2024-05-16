@@ -35,6 +35,17 @@ export async function GET(request: Request) {
             }
           }
         },
+        totalSale: {
+          $sum: {
+            $cond: {
+              if: {
+                $eq: ["$status", OrderStatus.Sold],
+              },
+              then: 1,
+              else: 0,
+            }
+          }
+        },
       },
     }
   ])

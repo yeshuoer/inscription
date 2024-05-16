@@ -27,6 +27,10 @@ export const orderSchema = new mongoose.Schema({
         type: Number,
         default: 4871333268,
     },   // seconds
+    updateDate: {
+        type: Date,
+        default: Date.now,
+    },
     creatorFeeRate: {
         type: Number,
         default: 0,
