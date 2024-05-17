@@ -50,7 +50,9 @@ export default function MarketPage() {
   }, [])
 
   const fetchData = async () => {
-    const res = await fetch('/api/market')
+    const res = await fetch('/api/market', {
+      cache: 'no-store',
+    })
     const data = await res.json()
     const list = data.data
     log('list', list)

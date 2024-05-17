@@ -32,6 +32,7 @@ export default function MarketListingPage() {
     if (isConnected && address) {
       const res = await fetch(`/api/order?seller=${address}&status=${OrderStatus.Listing}`, {
         method: 'GET',
+        cache: 'no-store',
       })
       const data = await res.json()
       setList(data.data)

@@ -30,6 +30,7 @@ export default async function MarketTokenPage({
 }) {
   const res = await fetch(`${process.env.API_BASE_URL}/api/order?ticker=${token}`, {
     method: 'GET',
+    cache: 'no-store',
   })
   const data = await res.json()
   const list = data.data as any[]
