@@ -21,9 +21,8 @@ export function CancelButton({
   useEffect(() => {
     const fn = async () => {
       if (isSuccess) {
-        const res = await changeOrderStatus(orderItem.listId, OrderStatus.Canceled)
-        const data = await res.json()
-        if (data.data) {
+        const data = await changeOrderStatus(orderItem.listId, OrderStatus.Canceled)
+        if (data) {
           router.refresh()
         }
       }

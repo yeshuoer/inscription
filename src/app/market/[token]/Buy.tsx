@@ -20,11 +20,11 @@ export function BuyButton({
   const router = useRouter()
 
   useEffect(() => {
+    log('购买成功了吗？', isSuccess)
     const fn = async () => {
       if (isSuccess) {
-        const res = await changeOrderStatus(orderItem.listId, OrderStatus.Sold)
-        const data = await res.json()
-        if (data.data) {
+        const data = await changeOrderStatus(orderItem.listId, OrderStatus.Sold)
+        if (data) {
           router.refresh()
         }
       }

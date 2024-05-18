@@ -56,14 +56,13 @@ export const fetchAddress = async (address: string) => {
 }
 
 export const changeOrderStatus = async (listId: Address, status: OrderStatus) => {
-  const res = await fetch('/api/market/status', {
-   method: 'POST',
-   body: JSON.stringify({
-     listId,
-     status,
-   })
- })
- return res
+  await connectToMongoDB()
+  const a = await Order.updateOne({
+    listId
+  }, {
+    status
+  })
+  return a.acknowledged
 }
 
 export const fetchMarketOrders = async (o: IFilter) => {
