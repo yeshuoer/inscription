@@ -4,9 +4,7 @@ import { OrderStatus } from "@/types"
 
 export const fetchRecords = async (toBlock: number) => {
   log('debug 3', process.env.NEXT_PUBLIC_API_BASE_URL)
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=${toBlock}`, {
-    cache: 'no-store',
-  })
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=${toBlock}`)
   const data = await res.json()
   log('debug 4')
   data.data = data.data.filter((record: any) => record.block > 0)
