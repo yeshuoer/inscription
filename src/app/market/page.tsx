@@ -91,9 +91,11 @@ export default function MarketPage() {
               </td>
               <td>{item.listingNum}</td>
               <td>
-                <Link href={`/market/${item._id}`}>
-                  <Image src="/circle-right.svg" alt="arrow-right" width={20} height={20} />
-                </Link>
+                {
+                  item.listingNum > 0 ? <Link href={`/market/${item._id}`}>
+                    <Image src="/circle-right.svg" alt="arrow-right" width={20} height={20} />
+                  </Link> : null
+                }
               </td>
             </tr>
           })

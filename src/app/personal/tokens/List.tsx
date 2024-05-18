@@ -5,6 +5,7 @@ import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransacti
 import { log } from "@/libs";
 import { ASC20Operation, OrderStatus } from "@/types"
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Address, numberToHex, parseEther, parseSignature, toBytes, toHex } from "viem";
@@ -20,6 +21,7 @@ export function List({
   tick,
   amt,
 }: Props) {
+  const router = useRouter()
   const { ensureConnected, accountRef } = useAutoConnectForTransaction()
   const { sendTransactionAsync } = useSendTransaction()
   const { signTypedDataAsync } = useSignTypedData()
@@ -133,6 +135,9 @@ export function List({
       const data = await res.json()
       if (data) {
         toast.success('List success!')
+        window.setTimeout(() => {
+          router.refresh()
+        }, 2000)
       }
     } catch(err) {
       toast.error((err as Error).message)
