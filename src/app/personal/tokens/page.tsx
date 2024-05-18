@@ -2,7 +2,7 @@
 
 import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
-import { fetchAddress, fetchRecords } from "@/libs/api";
+import { fetchAddress } from "@/libs/api";
 import { Transfer } from './Tansfer'
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
