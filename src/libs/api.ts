@@ -1,3 +1,5 @@
+'use server'
+
 import { Address } from "viem"
 import { log } from "."
 import { OrderStatus } from "@/types"
