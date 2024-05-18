@@ -2,6 +2,15 @@ import { Address } from "viem"
 import { log } from "."
 import { OrderStatus } from "@/types"
 
+export const fetchRecords = async (toBlock: number) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/records?fromBlock=1&toBlock=${toBlock}`, {
+    cache: 'no-store',
+  })
+  const data = await res.json()
+  data.data = data.data.filter((record: any) => record.block > 0)
+  return data
+}
+
 export const fetchTokens = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/tokens`, {
     cache: 'no-store',
