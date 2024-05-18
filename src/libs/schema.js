@@ -28,8 +28,8 @@ export const orderSchema = new mongoose.Schema({
         default: 4871333268,
     },   // seconds
     updateDate: {
-        type: Date,
-        default: Date.now,
+        type: Number,
+        default: Math.floor(Date.now() / 1000),
     },
     creatorFeeRate: {
         type: Number,
