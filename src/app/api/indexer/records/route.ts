@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   log('url', url)
   const res = await fetch(url, {})
   const data = await res.json()
-  log('debug 4')
+  log('debug 4', data)
   data.data = data.data.filter((record: any) => record.block > 0)
   return Response.json(data)
 }
