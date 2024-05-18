@@ -7,6 +7,7 @@ import { Transfer } from './Tansfer'
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 import { List } from './List';
+import Loading from '@/components/Loading';
 
 interface ListItem {
   tick: string;
@@ -16,6 +17,7 @@ interface ListItem {
 export default function PersonalInscriptionsPage() {
   const {address, isConnected} = useAccount()
   const [list, setList] = useState<ListItem[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     init()
@@ -23,9 +25,19 @@ export default function PersonalInscriptionsPage() {
 
   const init = async () => {
     if (isConnected && address) {
+      setLoading(true)
       const data = await fetchAddress(address)
       setList(data.data)
+      setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <Loading />
+  }
+
+  if (list.length === 0) {
+    return <p className='text-center'>No data</p>
   }
 
   return (
