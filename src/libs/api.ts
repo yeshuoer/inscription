@@ -1,11 +1,9 @@
-'use server'
-
 import { Address } from "viem"
 import { log } from "."
 import { OrderStatus } from "@/types"
 
-export const fetchRecords = async (toBlock: number) => {
-  let a = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=${toBlock}`
+export const fetchRecords = async () => {
+  let a = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=100000000`
   log('a', a)
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=${toBlock}`)
   const data = await res.json()
@@ -15,7 +13,7 @@ export const fetchRecords = async (toBlock: number) => {
 }
 
 export const fetchTokens = async () => {
-  const res = await fetch(`${process.env.GO_INDEXER_API}/tokens`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/tokens`, {
     cache: 'no-store',
   })
   const data = await res.json()
@@ -23,7 +21,7 @@ export const fetchTokens = async () => {
 }
 
 export const fetchToken = async (tick: string) => {
-  const res = await fetch(`${process.env.GO_INDEXER_API}/token/${tick}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/token/${tick}`, {
     cache: 'no-store',
   })
   const data = await res.json()
@@ -31,7 +29,7 @@ export const fetchToken = async (tick: string) => {
 }
 
 export const fetchAddress = async (address: string) => {
-  const res = await fetch(`${process.env.GO_INDEXER_API}/address/${address}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/address/${address}`, {
     cache: 'no-store',
   })
   const data = await res.json()

@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   } = parseRequest(request)
   log('debug 2')
 
-  let url = `${process.env.GO_INDEXER_API}/${service}?${queryString}`
+  let url = `${process.env.NEXT_PUBLIC_GO_INDEXER_API}/${service}?${queryString}`
   log('url', url)
   const res = await fetch(url, {
     cache: 'no-store',

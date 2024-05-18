@@ -39,7 +39,8 @@ const formatContent = (item: ASC20Record) => {
 }
 
 export default async function InscriptionPage() {
-  const data = await fetchRecords(100000000)
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records`)
+  const data = await res.json()
   log('data is?', data)
   const list = data.data as ASC20Record[]
 
