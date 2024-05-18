@@ -3,7 +3,6 @@ import { log } from "."
 import { OrderStatus } from "@/types"
 
 export const fetchRecords = async (toBlock: number) => {
-  log('haha,', `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=${toBlock}`)
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records?fromBlock=1&toBlock=${toBlock}`, {
     cache: 'no-store',
   })
@@ -13,7 +12,7 @@ export const fetchRecords = async (toBlock: number) => {
 }
 
 export const fetchTokens = async () => {
-  const res = await fetch(`${process.env.GO_INDEXER_API}/tokens`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/tokens`, {
     cache: 'no-store',
   })
   const data = await res.json()

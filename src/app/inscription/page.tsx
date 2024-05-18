@@ -40,6 +40,7 @@ const formatContent = (item: ASC20Record) => {
 
 export default async function InscriptionPage() {
   const data = await fetchRecords(100000000)
+  log('data is?', data)
   const list = data.data as ASC20Record[]
 
   return (
