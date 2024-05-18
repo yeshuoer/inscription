@@ -5,6 +5,7 @@ import { BuyButton } from "./Buy";
 import Link from "next/link";
 import Image from "next/image";
 import { RefreshButton } from "@/components/RefreshButton";
+import { fetchMarketOrders } from "@/libs/api";
 
 interface ITokenItem {
   ticker: string;
@@ -28,12 +29,9 @@ export default async function MarketTokenPage({
     token: string;
   }
 }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/order?ticker=${token}`, {
-    method: 'GET',
-    cache: 'no-store',
+  const list: any[] = await fetchMarketOrders({
+    ticker: token,
   })
-  const data = await res.json()
-  const list = data.data as any[]
   log('list', list)
   return <div>
     <header className="flex items-center justify-between mb-6">

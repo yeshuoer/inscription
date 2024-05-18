@@ -39,3 +39,9 @@ export interface IOrderType {
     s: `0x${string}`;
   }
 }
+
+export interface IFilter {
+  ticker?: string;
+  seller?: Address;
+  status?: OrderStatus;
+}

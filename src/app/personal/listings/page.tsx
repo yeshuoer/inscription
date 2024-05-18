@@ -6,6 +6,7 @@ import { Address, formatEther } from "viem";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 import { CancelButton } from "./Cancel";
+import { fetchMarketOrders } from "@/libs/api";
 
 interface ITokenItem {
   ticker: string;
@@ -30,12 +31,11 @@ export default function MarketListingPage() {
 
   const init = async () => {
     if (isConnected && address) {
-      const res = await fetch(`/api/order?seller=${address}&status=${OrderStatus.Listing}`, {
-        method: 'GET',
-        cache: 'no-store',
+      const data: any[] = await fetchMarketOrders({
+        seller: address,
+        status: OrderStatus.Listing,
       })
-      const data = await res.json()
-      setList(data.data)
+      setList(data)
     }
   }
   return <div>

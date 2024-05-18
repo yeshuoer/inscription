@@ -2,7 +2,9 @@
 
 import { Address } from "viem"
 import { log } from "."
-import { OrderStatus } from "@/types"
+import { IFilter, OrderStatus } from "@/types"
+import { connectToMongoDB } from "./db"
+import { Order } from "./model"
 
 export const fetchRecords = async (toBlock: number) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/records?fromBlock=1&toBlock=${toBlock}`, {
@@ -62,4 +64,11 @@ export const changeOrderStatus = async (listId: Address, status: OrderStatus) =>
    })
  })
  return res
+}
+
+export const fetchMarketOrders = async (o: IFilter) => {
+  await connectToMongoDB()
+  log('o', o)
+  const data = await Order.find(o)
+  return data
 }
