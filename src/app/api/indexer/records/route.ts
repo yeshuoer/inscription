@@ -8,5 +8,5 @@ export async function GET(request: Request) {
   const data = await res.json()
   log('debug 4', data)
   data.data = data.data.filter((record: any) => record.block > 0)
-  return Response.json(data)
+  return Response.json({data: data.data})
 }
