@@ -2,7 +2,6 @@
 
 import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
-import { fetchRecords } from "@/libs/api";
 import { useEffect, useState } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -51,7 +50,8 @@ export default function PersonalInscriptionsPage() {
   
   const init = async () => {
     if (isConnected) {
-      const data = await fetchRecords(100000000)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records`)
+      const data = await res.json()
       setList(data.data)
     }
   }

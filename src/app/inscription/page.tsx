@@ -1,6 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
 import { log } from "@/libs";
-import { fetchRecords } from "@/libs/api";
 import { RefreshButton } from '@/components/RefreshButton';
 
 enum ASC20Operation {
@@ -41,7 +40,7 @@ const formatContent = (item: ASC20Record) => {
 export default async function InscriptionPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/indexer/records`)
   const data = await res.json()
-  log('data is?', data)
+  log('data is2?', data)
   const list = data.data as ASC20Record[]
 
   return (
