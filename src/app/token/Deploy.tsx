@@ -118,7 +118,7 @@ export function Deploy() {
           </section>
           <section className="flex items-center mb-6">
             <p className="w-1/2 text-xl">Tick</p>
-            <input required type="text" value={tick} onChange={(e) => setTick(e.target.value)} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+            <input required type="text" value={tick} onChange={(e) => setTick(e.target.value.toLowerCase())} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
           </section>
           <section className="flex items-center mb-6">
             <p className="w-1/2 text-xl">Total Supply</p>
