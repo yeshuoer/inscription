@@ -8,6 +8,7 @@ import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagm
 import { abi } from '@/libs/abi'
 import Link from "next/link";
 import Image from "next/image";
+import Loading from "@/components/Loading";
 
 interface IOrderType {
   seller: Address;
@@ -39,6 +40,7 @@ interface IMarketToken {
 
 export default function MarketPage() {
   const [list, setList] = useState([])
+  const [loading, setLoading] = useState(false)
 
   const { data: hash, writeContractAsync } = useWriteContract()
   const { isLoading: isConfirming, isSuccess: isConfirmed } = useWaitForTransactionReceipt({
@@ -50,6 +52,7 @@ export default function MarketPage() {
   }, [])
 
   const fetchData = async () => {
+    setLoading(true)
     const res = await fetch('/api/market', {
       cache: 'no-store',
     })
@@ -57,6 +60,11 @@ export default function MarketPage() {
     const list = data.data
     log('list', list)
     setList(list)
+    setLoading(false)
+  }
+
+  if (loading) {
+    return <Loading />
   }
 
   return <div>
