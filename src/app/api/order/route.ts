@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 }
 
 const keepLookUntilExist = async (listId: Address, times: number): Promise<boolean> => {
-  if (times > 50) {
+  if (times > 10) {
     return false
   }
 
@@ -43,7 +43,7 @@ const keepLookUntilExist = async (listId: Address, times: number): Promise<boole
   if (data) {
     return true
   } else {
-    await sleep(5000)
+    await sleep(6000)
     log('refetch', times)
     return keepLookUntilExist(listId, times+1)
   }
@@ -67,6 +67,4 @@ export async function POST(request: Request) {
   })
 }
 
-export const config = {
-  maxDuration: 60,
-};
+export const maxDuration = 60
