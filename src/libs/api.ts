@@ -18,6 +18,12 @@ export const fetchTokens = async () => {
     cache: 'no-store',
   })
   const data = await res.json()
+  data.data = data.data.map((item: any) => {
+    return {
+      ...item,
+      progress: Number(item.progress / 10000),
+    }
+  })
   return data
 }
 

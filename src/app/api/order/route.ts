@@ -66,3 +66,7 @@ export async function POST(request: Request) {
     data: r
   })
 }
+
+export const config = {
+  maxDuration: 60,
+};
