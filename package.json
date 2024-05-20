@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:https": "next dev -p 3400 & local-ssl-proxy --key localhost-key.pem --cert localhost.pem --source 443 --target 3400",
+    "devs": "next dev -p 3400 & local-ssl-proxy --key localhost-key.pem --cert localhost.pem --source 443 --target 3400",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -17,6 +17,7 @@
     "local-ssl-proxy": "^2.0.5",
     "mongoose": "^8.3.4",
     "next": "14.2.3",
+    "next-nprogress-bar": "^2.3.12",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
