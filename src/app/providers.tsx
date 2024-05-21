@@ -80,6 +80,7 @@ export function Providers({
         await signIn('credentials', {
           signature,
           message: message.prepareMessage(),
+          callbackUrl: window.location.href,
         })
         return true
       } catch {
@@ -87,7 +88,9 @@ export function Providers({
       }
     },
     signOut: async () => {
-      signOut()
+      signOut({
+        callbackUrl: window.location.origin,
+      })
     },
   });
 
