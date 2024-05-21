@@ -1,9 +1,9 @@
 import NextAuth, { DefaultSession } from "next-auth"
 import credentials from "next-auth/providers/credentials"
-import { verify } from "./libs/api"
 import { z } from 'zod'
 import { log } from "./libs"
 import { Address } from "abitype"
+import { SiweMessage } from "siwe"
 
 declare module 'next-auth' {
   interface User {
@@ -20,6 +20,21 @@ const SigninSchema = z.object({
   signature: z.string(),
   message: z.string(),
 })
+
+export const verify = async (signature: string, message: string) => {
+  const siweMessage = new SiweMessage(message)
+  try {
+    const res = await siweMessage.verify({signature})
+    return {
+      data: res.data,
+      success: res.success,
+    }
+  } catch(err) {
+    return {
+      success: false,
+    }
+  }
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [

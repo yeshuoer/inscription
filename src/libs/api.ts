@@ -78,21 +78,6 @@ export const getNonce = async () => {
   return nonce
 }
 
-export const verify = async (signature: string, message: string) => {
-  const siweMessage = new SiweMessage(message)
-  try {
-    const res = await siweMessage.verify({signature})
-    return {
-      data: res.data,
-      success: res.success,
-    }
-  } catch(err) {
-    return {
-      success: false,
-    }
-  }
-}
-
 export const authAction = async () => {
   return await auth()
 }
