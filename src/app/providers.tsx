@@ -25,6 +25,7 @@ import { getNonce } from '@/libs/api';
 import { log } from '@/libs';
 import { useEffect } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation';
 
 const { wallets } = getDefaultWallets();
 
@@ -54,6 +55,7 @@ export function Providers({
   children
 }: { children: React.ReactNode }) {
   const { data, status, update } = useSession()
+  const pathname = usePathname()
 
   const authenticationAdapter = createAuthenticationAdapter({
     getNonce: async () => {
@@ -77,10 +79,11 @@ export function Providers({
     verify: async ({ message, signature }) => {
       try {
         // await signInAction(signature, message.prepareMessage())
+        log('haha', `${process.env.NEXT_PUBLIC_API_BASE_URL}/${pathname}`)
         await signIn('credentials', {
           signature,
           message: message.prepareMessage(),
-          callbackUrl: window.location.href,
+          // callbackUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/${pathname}`,
         })
         return true
       } catch {
@@ -89,7 +92,7 @@ export function Providers({
     },
     signOut: async () => {
       signOut({
-        callbackUrl: window.location.origin,
+        // callbackUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
       })
     },
   });
