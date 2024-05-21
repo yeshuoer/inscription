@@ -54,21 +54,13 @@ export function Providers({
   children
 }: { children: React.ReactNode }) {
   const { data, status, update } = useSession()
-  // const [status, setStatus] = React.useState<AuthenticationStatus>('unauthenticated')
-
-  useEffect(() => {
-    log('effect sesion', status, data?.user?.address, update)
-  }, [])
 
   const authenticationAdapter = createAuthenticationAdapter({
     getNonce: async () => {
-      log('nonce call?')
       const nonce = await getNonce()
-      log('nonce', nonce)
       return nonce
     },
     createMessage: ({ nonce, address, chainId }) => {
-      log('create message')
       return new SiweMessage({
         domain: window.location.host,
         address,
@@ -80,7 +72,6 @@ export function Providers({
       });
     },
     getMessageBody: ({ message }) => {
-      log('get message body', message)
       return message.prepareMessage();
     },
     verify: async ({ message, signature }) => {
@@ -96,7 +87,6 @@ export function Providers({
       }
     },
     signOut: async () => {
-      log('sign out')
       signOut()
     },
   });

@@ -6,8 +6,7 @@ import { Providers } from "./providers";
 import GlobalHeader from "@/components/GlobalHeader";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
-import { AppProps } from "next/app";
-import { Session } from "next-auth";
+import { auth } from "@/auth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,13 +15,12 @@ export const metadata: Metadata = {
   description: "Market",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  session,
 }: Readonly<{
   children: React.ReactNode;
-  session: Session;
 }>) {
+  const session = await auth()
   return (
     <html lang="en" data-theme="autumn">
       <body className={inter.className}>

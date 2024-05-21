@@ -6,7 +6,7 @@ import { IFilter, OrderStatus } from "@/types"
 import { connectToMongoDB } from "./db"
 import { Order } from "./model"
 import { SiweMessage, generateNonce } from "siwe"
-import { signIn, signOut } from "@/auth"
+import { auth, signIn, signOut } from "@/auth"
 
 export const fetchRecords = async (toBlock: number) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_GO_INDEXER_API}/records?fromBlock=1&toBlock=${toBlock}`, {
@@ -69,14 +69,12 @@ export const changeOrderStatus = async (listId: Address, status: OrderStatus) =>
 
 export const fetchMarketOrders = async (o: IFilter) => {
   await connectToMongoDB()
-  log('o', o)
   const data = await Order.find(o)
   return data
 }
 
 export const getNonce = async () => {
   const nonce = generateNonce()
-  log('getnonce', nonce)
   return nonce
 }
 
@@ -95,15 +93,6 @@ export const verify = async (signature: string, message: string) => {
   }
 }
 
-// export const signInAction = async (signature: string, message: string) => {
-//   const res = await signIn('credentials', {
-//     signature,
-//     message,
-//     redirectTo: '/',
-//   })
-//   return res
-// }
-
-// export const signOutAction = async () => {
-//   signOut()
-// }
+export const authAction = async () => {
+  return await auth()
+}

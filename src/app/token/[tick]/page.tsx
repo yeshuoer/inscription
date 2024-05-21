@@ -8,10 +8,8 @@ import { RefreshButton } from "@/components/RefreshButton";
 
 
 export default async function TokenDetialPage({params}: {params: {tick: string}}) {
-  log('tick', params.tick)
   const data = await fetchToken(params.tick)
   const detail = data.data
-  log('detail', detail)
 
   return <div className="w-full">
     <header className="flex items-center justify-between mb-6">

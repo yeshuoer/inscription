@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth, { DefaultSession } from "next-auth"
 import credentials from "next-auth/providers/credentials"
 import { verify } from "./libs/api"
 import { z } from 'zod'
@@ -8,6 +8,11 @@ import { Address } from "abitype"
 declare module 'next-auth' {
   interface User {
     address: Address;
+  }
+  interface Session {
+    user: {
+      address: Address;
+    } & DefaultSession["user"];
   }
 }
 
@@ -31,7 +36,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null
           }
           const address = res.data?.address as Address
-          log('address auth pass')
           return {
             address,
           }
@@ -41,4 +45,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     })
   ],
+  callbacks: {
+    jwt: async ({token, user }) => {
+      if (user) {
+        token.address = user.address
+      }
+      return token
+    },
+    session: async ({session, token}) => {
+      session.user.address = token.address as Address
+      return session
+    }
+  }
 })

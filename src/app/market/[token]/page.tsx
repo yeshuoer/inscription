@@ -32,7 +32,7 @@ export default async function MarketTokenPage({
   const list: any[] = await fetchMarketOrders({
     ticker: token,
   })
-  log('list', list)
+
   return <div>
     <header className="flex items-center justify-between mb-6">
         <div className="flex items-center">

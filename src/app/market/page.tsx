@@ -58,7 +58,7 @@ export default function MarketPage() {
     })
     const data = await res.json()
     const list = data.data
-    log('list', list)
+
     setList(list)
     setLoading(false)
   }
