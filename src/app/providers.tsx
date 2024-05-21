@@ -56,6 +56,7 @@ export function Providers({
 }: { children: React.ReactNode }) {
   const { data, status, update } = useSession()
   const pathname = usePathname()
+  log('pathname', pathname)
 
   const authenticationAdapter = createAuthenticationAdapter({
     getNonce: async () => {
@@ -83,8 +84,8 @@ export function Providers({
         await signIn('credentials', {
           signature,
           message: message.prepareMessage(),
-          // callbackUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/${pathname}`,
-          redirect: false,
+          callbackUrl: `/`,
+          redirect: pathname === '/401',
         })
         return true
       } catch {
@@ -93,7 +94,8 @@ export function Providers({
     },
     signOut: async () => {
       signOut({
-        // callbackUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
+        redirect: true,
+        callbackUrl: `/`,
       })
     },
   });
