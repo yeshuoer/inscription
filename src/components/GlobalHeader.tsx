@@ -19,7 +19,7 @@ export default function GlobalHeader() {
       color="#81192a"
       options={{ showSpinner: false }}
     />
-    <header className='box-border px-6 fixed left-0 top-0 z-10 w-full border-b-2 bg-base-100'>
+    <header className='box-border px-6 fixed left-0 top-0 z-10 w-full shadow-md bg-base-100'>
       <div className="navbar">
         <div className="flex-1">
           <Link href='/' className='text-xl font-bold italic text-primary flex items-center'>

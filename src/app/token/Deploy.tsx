@@ -51,31 +51,31 @@ export function Deploy() {
     const calldataContent = getCalldataContent()
     const calldata = toHex(calldataContent)
 
-    // eip712 sign
-    const signature = await signTypedDataAsync({
-      types: {
-        Address: [
-          { name: 'address', type: 'address' },
-        ],
-        Confirm: [
-          { name: 'Wallet used', type: 'Address' },
-          { name: 'Interact with', type: 'Address' },
-          { name: 'data', type: 'string' },
-          { name: 'utf8', type: 'string' },
-        ]
-      },
-      primaryType: 'Confirm',
-      message: {
-        'Wallet used': {
-          address: accountRef.current.address,
-        },
-        'Interact with': {
-          address: accountRef.current.address,
-        },
-        data: calldata,
-        utf8: calldataContent,
-      },
-    })
+    // // eip712 sign
+    // const signature = await signTypedDataAsync({
+    //   types: {
+    //     Address: [
+    //       { name: 'address', type: 'address' },
+    //     ],
+    //     Confirm: [
+    //       { name: 'Wallet used', type: 'Address' },
+    //       { name: 'Interact with', type: 'Address' },
+    //       { name: 'data', type: 'string' },
+    //       { name: 'utf8', type: 'string' },
+    //     ]
+    //   },
+    //   primaryType: 'Confirm',
+    //   message: {
+    //     'Wallet used': {
+    //       address: accountRef.current.address,
+    //     },
+    //     'Interact with': {
+    //       address: accountRef.current.address,
+    //     },
+    //     data: calldata,
+    //     utf8: calldataContent,
+    //   },
+    // })
 
     // send tx
     const txhash = await sendTransactionAsync({

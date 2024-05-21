@@ -84,6 +84,7 @@ export function Providers({
           signature,
           message: message.prepareMessage(),
           // callbackUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}/${pathname}`,
+          redirect: false,
         })
         return true
       } catch {
