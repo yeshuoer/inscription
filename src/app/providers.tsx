@@ -27,8 +27,6 @@ import { useEffect } from 'react';
 import { signIn, signOut, useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation';
 
-const { wallets } = getDefaultWallets();
-
 const config = getDefaultConfig({
   appName: 'RainbowKit demo',
   projectId: 'YOUR_PROJECT_ID',
@@ -56,7 +54,6 @@ export function Providers({
 }: { children: React.ReactNode }) {
   const { data, status, update } = useSession()
   const pathname = usePathname()
-  log('pathname', pathname)
 
   const authenticationAdapter = createAuthenticationAdapter({
     getNonce: async () => {

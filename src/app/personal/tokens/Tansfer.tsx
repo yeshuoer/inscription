@@ -24,6 +24,7 @@ export function Transfer({
   const [toAddress, setToAddress] = useState('')
   const [toAmount, setToAmount] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [pending, setPending] = useState(false)
 
   const getCalldataContent = () => {
     const o = {
@@ -57,52 +58,64 @@ export function Transfer({
     const calldataContent = getCalldataContent()
     const calldata = toHex(calldataContent)
 
-    // eip712 sign
-    const signature = await signTypedDataAsync({
-      types: {
-        Address: [
-          { name: 'address', type: 'address' },
-        ],
-        Transfer: [
-          { name: 'Wallet used', type: 'Address' },
-          { name: 'Transfer to', type: 'Address' },
-          { name: 'data', type: 'string' },
-          { name: 'utf8', type: 'string' },
-        ]
-      },
-      primaryType: 'Transfer',
-      message: {
-        'Wallet used': {
-          address: accountRef.current.address,
-        },
-        'Transfer to': {
-          address: toAddress as `0x${string}`,
-        },
-        data: calldata,
-        utf8: calldataContent,
-      },
-    })
+    // // eip712 sign
+    // const signature = await signTypedDataAsync({
+    //   types: {
+    //     Address: [
+    //       { name: 'address', type: 'address' },
+    //     ],
+    //     Transfer: [
+    //       { name: 'Wallet used', type: 'Address' },
+    //       { name: 'Transfer to', type: 'Address' },
+    //       { name: 'data', type: 'string' },
+    //       { name: 'utf8', type: 'string' },
+    //     ]
+    //   },
+    //   primaryType: 'Transfer',
+    //   message: {
+    //     'Wallet used': {
+    //       address: accountRef.current.address,
+    //     },
+    //     'Transfer to': {
+    //       address: toAddress as `0x${string}`,
+    //     },
+    //     data: calldata,
+    //     utf8: calldataContent,
+    //   },
+    // })
 
     // send tx
+    setPending(true)
     const txhash = await sendTransactionAsync({
       to: toAddress as `0x${string}`,
       value: BigInt(0),
       data: calldata,
     }, {
       onError: error => {
-        toast.error(error.message)
+        toast.error('Transfer failed')
+        setPending(false)
       },
     })
-    const url = process.env.NEXT_PUBLIC_ETHERSCAN_URL + txhash
-    toast.custom(
-      <div role="alert" className="alert w-auto mt-16">
-        <span>Follow your transaction on </span>
-        <a className="link link-info" href={url} target="_blank">{txhash}</a>
-      </div>, {
-      duration: 5000,
-    })
 
+    toast.success('Transaction is sent.')
+
+    // const url = process.env.NEXT_PUBLIC_ETHERSCAN_URL + txhash
+    // toast.custom(
+    //   <div role="alert" className="alert w-auto mt-16">
+    //     <span>Follow your transaction on </span>
+    //     <a className="link link-info" href={url} target="_blank">{txhash}</a>
+    //   </div>, {
+    //   duration: 5000,
+    // })
+
+    // setIsOpen(false)
+  }
+
+  const handleCancel = () => {
     setIsOpen(false)
+    setPending(false)
+    setToAddress('')
+    setToAmount('')
   }
 
   return <>
@@ -141,8 +154,12 @@ export function Transfer({
 
           <div className="grid grid-cols-2 gap-3 w-full">
             {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-outline mr-2 w-full" onClick={() => setIsOpen(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary w-full">Transfer</button>
+            <button className="btn btn-outline mr-2 w-full" onClick={() => handleCancel()}>Cancel</button>
+            <button disabled={pending} type="submit" className="btn btn-primary w-full">
+              {
+                pending ? 'Pending...' : 'Transfer'
+              }
+            </button>
           </div>
         </form>
       </div>

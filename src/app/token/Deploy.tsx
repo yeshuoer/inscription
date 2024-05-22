@@ -4,7 +4,7 @@ import { log } from "@/libs"
 import { useRef, useState } from "react"
 import { useSendTransaction, useSignTypedData } from "wagmi"
 import { ASC20Operation } from '@/types'
-import { toHex } from "viem"
+import { Hash, toHex } from "viem"
 import toast from "react-hot-toast"
 import { useRouter } from "next/navigation"
 import { useAutoConnectForTransaction } from "@/hooks/useAutoConnectForTransaction"
@@ -13,9 +13,9 @@ import clsx from "clsx"
 export function Deploy() {
   const router = useRouter()
 
-  const { sendTransactionAsync } = useSendTransaction()
-  const { signTypedDataAsync } = useSignTypedData()
   const { ensureConnected, accountRef } = useAutoConnectForTransaction()
+  const { sendTransactionAsync } = useSendTransaction()
+  const [pending, setPending] = useState(false)
 
   const [tick, setTick] = useState('')
   const [max, setMax] = useState('')
@@ -78,33 +78,45 @@ export function Deploy() {
     // })
 
     // send tx
+    setPending(true)
     const txhash = await sendTransactionAsync({
       to: accountRef.current.address,
       value: BigInt(0),
       data: calldata,
     }, {
       onError: error => {
-        toast.error(error.message)
+        toast.error('Deploy failed.')
+        setPending(false)
       },
     })
 
-    const url = process.env.NEXT_PUBLIC_ETHERSCAN_URL + txhash
-    toast.custom(
-      <div role="alert" className="alert w-auto mt-16">
-        <span>Follow your transaction on </span>
-        <a className="link link-info" href={url} target="_blank">{txhash}</a>
-      </div>, {
-      duration: 5000,
-    })
+    toast.success('Transaction is sent.')
 
+    // const url = process.env.NEXT_PUBLIC_ETHERSCAN_URL + txhash
+    // toast.custom(
+    //   <div role="alert" className="alert w-auto mt-16">
+    //     <span>Follow your transaction on </span>
+    //     <a className="link link-info" href={url} target="_blank">{txhash}</a>
+    //   </div>, {
+    //   duration: 5000,
+    // })
+
+    // setIsOpen(false)
+  }
+
+  const handleCancel = () => {
     setIsOpen(false)
+    setPending(false)
+    setTick('')
+    setMax('')
+    setLimit('')
   }
 
   return <>
     {/* Open the modal using document.getElementById('ID').isOpen() method */}
     <button className="btn btn-primary btn-sm" onClick={() => setIsOpen(true)}>Deploy</button>
 
-    <dialog 
+    <dialog
       className={clsx([
         'modal',
         isOpen && 'modal-open',
@@ -131,8 +143,12 @@ export function Deploy() {
 
           <div className="grid grid-cols-2 gap-3 w-full">
             {/* if there is a button in form, it will close the modal */}
-            <button type="button" className="btn btn-outline mr-2 w-full" onClick={() => setIsOpen(false)}>Cancel</button>
-            <button type="submit" className="btn btn-primary w-full">Deploy</button>
+            <button type="button" className="btn btn-outline mr-2 w-full" onClick={() => handleCancel()}>Cancel</button>
+            <button disabled={pending} type="submit" className="btn btn-primary w-full">
+              {
+                pending ? 'Pending...' : 'Deploy'
+              }
+            </button>
           </div>
         </form>
       </div>
